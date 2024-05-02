@@ -142,7 +142,26 @@ def upload_file():
 
         output_text_1 = f"----------discriminator-----------\nAccuracy: {accuracy}\nF-measuer: {F_measure}\n\n"
 
-    return jsonify({'prediction': accuracy})
+    results = {
+    '使用した重み': opt.pth_path2,
+    '処理時間（秒）': training_time,
+    'TPR-FPR': TPR - FPR,
+    'TP': int(TP),  # NumPy int64 to Python int
+    'FN': int(FN),
+    'FP': int(FP),
+    'TN': int(TN)
+}
+
+    if TP != 0:
+        results.update({
+            '精度': float(accuracy_score(y_true, y_pred)),  # Ensure it's a standard float
+            '適合率': float(precision_score(y_true, y_pred)),
+            '再現率': float(recall_score(y_true, y_pred)),
+            'F値': float(f1_score(y_true, y_pred)),
+            '特異度': float(TN / (TN + FP))  # Calculate and convert to float
+        })
+
+    return jsonify(results)
 
 
 
