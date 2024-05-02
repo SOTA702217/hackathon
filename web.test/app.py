@@ -46,12 +46,18 @@ def upload_file():
     if 'upfile[]' not in request.files:
         return "ファイルが提供されていません", 400
         
-    file = request.files['upfile[]']
-    if file.filename == '':
+    files = request.files.getlist('upfile[]')
+    if not files or all(f.filename == '' for f in files):
         return "ファイルが選択されていません", 400
-    
-    file_path = "./" + secure_filename(file.filename)
-    file.save(file_path)
+
+    for file in files:
+        if file.filename:
+            filename = secure_filename(file.filename)
+            # アップロードディレクトリへのパスを作成
+            upload_path = os.path.join('./uploads', filename)
+            # ファイルを保存
+            file.save(upload_path) # ファイルを保存するディレクトリを指定
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--testsize', type=int, default=352, help='testing size')
 
