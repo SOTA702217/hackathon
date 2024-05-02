@@ -1,12 +1,12 @@
 import argparse
-import glob
-import os
+# import glob
+# import os
 
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
 
-import cv2
+# import cv2
 import numpy as np
 import torch
 
@@ -15,10 +15,10 @@ from torchvision import transforms
 from lib.ResNet_10 import ResNet10
 
 from utils.dataloader2 import test_dataset
-import glob
+# import glob
 
 import time
-import psutil
+# import psutil
 
 import os
 from flask import Flask, request, render_template, redirect, url_for, jsonify
