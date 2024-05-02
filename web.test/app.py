@@ -167,22 +167,8 @@ def upload_file():
             '特異度': float(TN / (TN + FP))  # Calculate and convert to float
         })
 
-    return jsonify(results)
+    return render_template('result.html', result=results)
 
-
-
-# @app.route('/upload_image', methods=['POST'])
-# def upload_image():
-#     file = request.files['image_file']
-#     if file:
-#         image = Image.open(file.stream)
-#         tensor_image = transforms.functional.to_tensor(image).unsqueeze(0)
-#         with torch.no_grad():
-#             output = model(tensor_image)
-#         _, predicted = torch.max(output, 1)
-#         result = predicted.item()
-#         return jsonify({'prediction': result})
-#     return "ファイルがアップロードされていません", 400
 
 if __name__ == '__main__':
     app.run(debug=True)
