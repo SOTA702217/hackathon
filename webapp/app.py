@@ -64,8 +64,12 @@ def create_model():
 # }
 
 # データローダーをインスタンス化
-loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
-test_loader = loader.run()
+# データローダーをインスタンス化
+data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
+
+# run メソッドを呼び出してデータローダーと解答位置を取得
+test_loader, answer_position = data_loader_instance.run()
+
 
 print('| Building net')
 net = create_model()
