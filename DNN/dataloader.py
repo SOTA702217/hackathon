@@ -29,13 +29,17 @@ class test_dataset(Dataset):
        label2_dic=[3,5,10,19,23,129,131,284,332,346]
        for i in range(0, num_class):
            j=0
+           l=random.randint(1, 4)
+        #    print(l)
            for k in self.random_numbers:
                 j+=1
-                if j!=4:
+                if j!=l:
+                    
                     self.target.append(target_dic[i])
                     self.label.append(label_dic[i])
                     self.images.append(os.path.join(target_dic[i], str(k)+'.JPEG'))
                 else:
+                    print(l)
                     self.target.append(target2_dic[i])
                     self.label.append(label2_dic[i])
                     self.images.append(os.path.join(target2_dic[i], str(k)+'.JPEG'))
