@@ -20,6 +20,7 @@ target2_dic=['イタチザメ', 'アカエイ', 'アトリ', 'コガラ', 'ハ�
 label2_dic=[3,5,10,19,23,129,131,284,332,346]
 mkdir = os.path.join('.', 'dataset')
 count_images=[0]*len(label_dic)
+count_images2=[0]*len(label_dic)
 num_images=10
 # imageとラベルを一致させるファイルを開く          
 os.makedirs(mkdir, exist_ok = True)
@@ -44,11 +45,11 @@ with open(os.path.join(root_dir, 'info', 'imagenet_val.txt')) as f:
         if target in label2_dic:
             index = label2_dic.index(target)
             # 画像枚数がnum_imagesを超えないようにする
-            if count_images[index] < num_images:
+            if count_images2[index] < num_images:
                 # 無ければそのクラス用のフォルダーを作る
                 os.makedirs(os.path.join(mkdir, str(target2_dic[index])), exist_ok = True)
                 # 画像のコピ-
                 shutil.copyfile(os.path.join(root_image, 'val', img), 
                                 os.path.join(mkdir, str(target2_dic[index]), 
-                                        str(count_images[index]) + '.JPEG'))
-                count_images[index]+=1
+                                        str(count_images2[index]) + '.JPEG'))
+                count_images2[index]+=1
