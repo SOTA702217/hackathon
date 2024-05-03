@@ -20,7 +20,7 @@ class test_dataset(Dataset):
        self.label = []
        self.images = [] 
        random_numbers = random.sample(range(10), 4)#randamな4要素の配列
-       print(random_numbers) 
+    #    print(random_numbers) 
        target_dic=['ホホジロザメ', 'シュモクザメ', 'ダチョウ', 'カササギ', 'フクロウ', \
        'コウノトリ', 'フラミンゴ', 'トラ猫', '木彫り兎', '牛']
        label_dic=[2,4,9,18,24,128,130,283,331,345]
@@ -41,11 +41,11 @@ class test_dataset(Dataset):
                     self.images.append(os.path.join(target2_dic[i], str(k)+'.JPEG'))
 
     def __getitem__(self, index):  
-       print(self.images)
+    #    print(self.images)
        img_path = self.images[index]
        targets = self.target[index]     
        labels = self.label[index]
-       print(img_path)
+    #    print(img_path)
        image = Image.open(os.path.join(self.root,img_path)).convert('RGB') 
        img = self.transform(image) 
        return img, targets, labels
