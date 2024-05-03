@@ -67,10 +67,13 @@ def run_script():
     net = create_model()
 
     index, targes, images = test(net, test_loader)
-    print(index)
-    print(targes)
-    print(images)
-    print(answer_position)
+    # print(index)
+    # print(targes)
+    # print(images)
+    # print(answer_position)
+
+    count=sum(a==b for a,b in  zip(index,answer_position))
+    par=int(count*10)
    
 #     results = {
 #     '使用した重み': opt.pth_path2,
@@ -94,7 +97,8 @@ def run_script():
             '予測画像': index,
             'ラベル': targes,
             'パス': images,
-            '正解バッチ': answer_position
+            '正解バッチ': answer_position,
+            '正解率': str(par)+'%'
         }
     
     return render_template('result.html', result=result)
