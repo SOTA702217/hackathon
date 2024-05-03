@@ -25,7 +25,7 @@ def test(net, loader):
     correct = 0
     total = 0
     with torch.no_grad():
-        for batch_idx, (inputs, targets, labels) in enumerate(loader):
+        for batch_idx, (img_path,inputs, targets, labels) in enumerate(loader):
             outputs = net(inputs)
             _, predicted = torch.max(outputs, 1)            
             predict.append(predicted)
@@ -41,10 +41,10 @@ def create_model():
 
 
 loader = test_dataloader(root=dir_path,batch_size=batch_size, num_class=10,random_numbers=random_numbers)
-test_loader = loader.run()
+test_loader,answer_position = loader.run()
+# print(answer_position)
 # print(random_numbers)
 print('| Building net')
 net = create_model()
-
 pre = test(net, test_loader)
 print(pre)
