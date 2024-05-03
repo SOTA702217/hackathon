@@ -49,27 +49,27 @@ def test(net, loader):
 # モデル選択
 
 model_name = {
-    'ResNet18': [models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1')],
-    'VGG16': [models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1')],
-    'AlexNet': [models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')],
+    'ResNet18': models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1'),
+    'VGG16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'),
+    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'),
 }
 
-def create_model():
+def create_model(models_name):
     # model = models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')
     # model = models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1')
-    model = models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1')
+    model = model_name.get(models_name)
     return model 
 
 
 
 # データローダーをインスタンス化
-loader, answer_position = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
+loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
 # データローダー作成
-test_loader = loader.run()
+test_loader, answer_position  = loader.run()
 
 # モデルをビルド
 print('| Building net')
-net = create_model()
+net = create_model('ResNet18')
 # ネットワークの予測
 index, targes, images = test(net, test_loader)
 print(index)
