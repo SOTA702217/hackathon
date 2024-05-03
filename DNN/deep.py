@@ -14,7 +14,8 @@ from dataloader import test_dataloader
 
 dir_path = './dataset'
 batch_size = 4
-
+num_sample = 10
+class_num = 10
 
 
 # ネットワークの予測を出力
@@ -26,20 +27,22 @@ def test(net, loader):
     with torch.no_grad():
         for batch_idx, (inputs, targets, labels) in enumerate(loader):
             outputs = net(inputs)
-            _, predicted = torch.max(outputs, 1)            
-            predict.append(predicted)
-            print(batch_idx)
+            out_soft=torch.softmax(outputs, dim=1)
+            
+            print(torch.sum(out_soft, 0))
+            # _, predicted = torch.max(outputs, 1)            
+            # predict.append(predicted)
+            # print(batch_idx)
 
     return predict
 
 # モデルをビルド
 def create_model():
-    # ここに名前入れるように
     model = models.resnet50(pretrained=True)
     return model 
 
 
-loader = test_dataloader(root=dir_path,batch_size=batch_size, num_samples=10, num_class=10)
+loader = test_dataloader(root=dir_path,batch_size=batch_size, num_samples=num_sample, num_class=class_num)
 test_loader = loader.run()
 
 print('| Building net')
