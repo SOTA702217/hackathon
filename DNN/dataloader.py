@@ -29,9 +29,12 @@ class test_dataset(Dataset):
                self.images.append(os.path.join(target_dic[i], str(k)+'.JPEG'))
        
     def __getitem__(self, index):  
+       print(self.images)
+       exit()
        img_path = self.images[index]
        targets = self.target[index]     
        labels = self.label[index]
+       print(img_path)
        image = Image.open(os.path.join(self.root,img_path)).convert('RGB') 
        img = self.transform(image) 
        return img, targets, labels
