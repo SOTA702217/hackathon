@@ -91,18 +91,10 @@ def run_script():
 #             '特異度': float(TN / (TN + FP))  # Calculate and convert to float
 #         })
     result = {
-            '使用した重み': './ResNet10/1/Discriminator-best2.pth',
-            '処理時間（秒）': 0.3628864288330078,
-            'TPR-FPR': 0.6666666666666667,
-            'TP': 2,
-            'FN': 0,
-            'FP': 1,
-            'TN': 2,
-            '精度': 0.8,
-            '適合率': 0.6666666666666666,
-            '再現率': 1.0,
-            'F値': 0.8,
-            '特異度': 0.6666666666666666
+            '予測画像': index,
+            'ラベル': targes,
+            'パス': images,
+            '正解バッチ': answer_position
         }
     
     return render_template('result.html', result=result)
