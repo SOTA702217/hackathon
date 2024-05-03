@@ -50,30 +50,37 @@ class test_dataset(Dataset):
                     self.label.append(label_dic_near[i])
                     self.images.append(os.path.join(target_dic_near[i], str(k)+'.JPEG'))
                 j+=1
-    # 
+    # バッチごとにサンプルを追加
     def __getitem__(self, index):  
        img_path = self.images[index]
        targets = self.target[index]     
        labels = self.label[index]
        image = Image.open(os.path.join(self.root,img_path)).convert('RGB') 
        img = self.transform(image) 
-       return img_path,img, targets, labels
+       # returnはそれぞれ，画像へのパス，画像，正解ラベル，正解インデックス
+       return img_path, img, targets, labels
     
     def __len__(self):
         return len(self.images)       
     
-
+# データローダー
 class test_dataloader():  
     def __init__(self, root, batch_size, num_class,random_numbers):    
+        # 1度に表示する画像
         self.batch_size = batch_size
+        # クラス数
         self.num_class = num_class
+        # データセットへのパス
         self.root = root
+        # 選択する写真を決める
         self.random_numbers =random_numbers 
+        # 画像サイズの変更，DNNに入力できるように画像の形を変更
         self.transform = transforms.Compose([
             transforms.CenterCrop(224),
             transforms.ToTensor()
         ])
-        
+    
+    # データセットの作成
     def run(self):        
         test_datasets = test_dataset(self.root, transform=self.transform,
                                      num_class=self.num_class,random_numbers=self.random_numbers)
@@ -81,4 +88,4 @@ class test_dataloader():
             dataset=test_datasets, 
             batch_size=self.batch_size,
             shuffle=False,)             
-        return test_loader,test_datasets.answer_position             
+        return test_loader, test_datasets.answer_position             
