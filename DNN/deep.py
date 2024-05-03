@@ -26,10 +26,14 @@ def test(net, loader):
     total = 0
     with torch.no_grad():
         for batch_idx, (inputs, targets, labels) in enumerate(loader):
+            # DNNの予測
             outputs = net(inputs)
-            out_soft=torch.softmax(outputs, dim=1)
-            
-            print(torch.sum(out_soft, 0))
+            # 予測を確率に
+            out_soft = torch.softmax(outputs, dim=1)
+            # クラスごとにバッチ内の予測確率の和をとる
+            sum_out = torch.sum(out_soft, dim=0)
+            # バッチ内で最も予測確率が高いクラスを特定
+            _, predicted = torch.max(sum_out, dim=0)
             # _, predicted = torch.max(outputs, 1)            
             # predict.append(predicted)
             # print(batch_idx)
