@@ -12,7 +12,7 @@ import torchvision
 import torchvision.models as models
 from dataloader import test_dataloader
 
-dir_path = './dataset'
+dir_path = os.path.join('.', 'dataset')
 batch_size = 4
 
 
@@ -39,7 +39,7 @@ def create_model():
     return model 
 
 
-loader = test_dataloader(root=dir_path,batch_size=batch_size, num_samples=10, num_class=10)
+loader = test_dataloader(root=dir_path,batch_size=batch_size, num_class=10)
 test_loader = loader.run()
 
 print('| Building net')
