@@ -20,6 +20,7 @@ class test_dataset(Dataset):
        self.label = []
        self.images = [] 
        self.random_numbers =random_numbers 
+       self.answer_position=[]
     #    print(random_numbers) 
        target_dic=['ホホジロザメ', 'シュモクザメ', 'ダチョウ', 'カササギ', 'フクロウ', \
        'コウノトリ', 'フラミンゴ', 'トラ猫', '木彫り兎', '牛']
@@ -29,10 +30,10 @@ class test_dataset(Dataset):
        label2_dic=[3,5,10,19,23,129,131,284,332,346]
        for i in range(0, num_class):
            j=0
-           l=random.randint(1, 4)
-        #    print(l)
+           l=random.randint(0, 3)
+           self.answer_position.append(l)
+        #    print(self.answer_position)
            for k in self.random_numbers:
-                j+=1
                 if j!=l:
                     
                     self.target.append(target_dic[i])
@@ -43,6 +44,7 @@ class test_dataset(Dataset):
                     self.target.append(target2_dic[i])
                     self.label.append(label2_dic[i])
                     self.images.append(os.path.join(target2_dic[i], str(k)+'.JPEG'))
+                j+=1
 
     def __getitem__(self, index):  
     #    print(self.images)
@@ -76,4 +78,4 @@ class test_dataloader():
             dataset=test_datasets, 
             batch_size=self.batch_size,
             shuffle=False,)             
-        return test_loader 
+        return test_loader,test_datasets.answer_position             

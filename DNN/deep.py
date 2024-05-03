@@ -46,30 +46,31 @@ def test(net, loader):
 
     return min_index_list, targes_list, images_list
 
-# モデルをビルド
+# モデル選択
+
+model_name = {
+    'ResNet18': [models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1')],
+    'VGG16': [models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1')],
+    'AlexNet': [models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')],
+}
+
 def create_model():
-    model = models.resnet50(pretrained=True)
+    # model = models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')
+    # model = models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1')
+    model = models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1')
     return model 
 
-# model_name = {
-#     'ResNet50': [models.resnet50(pretrained=True)],
-#     'VGG16': [models.alexnet('resnet18', cifar=True)],
-#     'bigresnet50': [resnet.ResNet('resnet18', cifar=True), 2048],
-#     'bigresnet18_preact': [preact_resnet.ResNet18, 512],
-#     'resnet18': [resnet.ResNet('resnet18'), 512],
-#     'resnet34': [resnet.ResNet('resnet34'), 512],
-#     'resnet50': [resnet.ResNet('resnet50'), 2048],
-#     # 追加
-#     'Coresnet50': [resnet.ResNet('resnet50', preact=True), 2048],
-# }
+
 
 # データローダーをインスタンス化
-loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
+loader, answer_position = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
+# データローダー作成
 test_loader = loader.run()
 
+# モデルをビルド
 print('| Building net')
 net = create_model()
-
+# ネットワークの予測
 index, targes, images = test(net, test_loader)
 print(index)
 print(targes)
