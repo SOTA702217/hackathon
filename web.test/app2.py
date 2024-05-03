@@ -25,6 +25,8 @@ from flask import Flask, request, render_template, redirect, url_for, jsonify
 from PIL import Image
 from werkzeug.utils import secure_filename
 
+# static_folderを指定しているのは、画像ファイルを表示するため
+# app = Flask(__name__, static_folder = "./static/")
 app = Flask(__name__)
 k = 5
 thresh = 160
@@ -41,7 +43,17 @@ model.eval()
 def index():
     return render_template('button.html')
 
-@app.route('/run_script', methods=['POST'])
+@app.route('/quiz', methods=['POST'])
+def quiz():
+    image_paths = [
+        '/imgs/image1.jpg',
+        '/imgs/image2.jpg',
+        '/imgs/image3.jpg',
+        '/imgs/image4.jpg'
+    ]
+    return render_template('quiz.html',image_paths=image_paths)
+
+@app.route('/run_script', methods=['GET', 'POST'])
 def run_script():
 
 

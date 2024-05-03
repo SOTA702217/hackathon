@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>仲間外れクイズ</title>
+  <style>
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .image-container img {
+      width: 200px;
+      height: 200px;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .image-container img.selected {
+      border-color: blue;
+    }
+
+    #result {
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #next-btn {
+      display: none; /* 初期状態では非表示 */
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>仲間外れを選んでください</h1>
+  <div class="image-container">
+    <!-- <img src="{{ url_for('static', filename='/imgs/image1.jpg') }}" onclick="checkAnswer(this)">
+    <img src="{{ url_for('static', filename='/imgs/image2.jpg') }}" onclick="checkAnswer(this)">
+    <img src="{{ url_for('static', filename='/imgs/image3.jpg') }}" onclick="checkAnswer(this)">
+    <img src="{{ url_for('static', filename='/imgs/image4.jpg') }}" onclick="checkAnswer(this)"> -->
+    {% for path in image_paths %}
+    <img src="{{ url_for('static', filename=path) }}" onclick="checkAnswer(this)">
+    {% endfor %}
+  </div>
+  <div id="result"></div>
+
+  <div id="next-btn">
+    <button onclick="showNextQuestion()">次へ</button>
+  </div>
+
+  <script>
+    let correctAnswer = 3; // 正解の画像番号（0から始まる）
+
+    function checkAnswer(img) {
+      let images = document.querySelectorAll('.image-container img');
+      images.forEach(img => {
+        img.classList.remove('selected');
+        img.onclick = null; // イベントハンドラを無効化
+      });
+    //   images.forEach(img => img.classList.remove('selected'));
+      img.classList.add('selected');
+
+      let selectedIndex = Array.from(images).indexOf(img);
+      let result = document.getElementById('result');
+
+      if (selectedIndex === correctAnswer) {
+        result.textContent = '正解！';
+      } else {
+        result.textContent = '不正解...';
+      }
+
+    document.getElementById('next-btn').style.display = 'block';
+    
+    }
+
+    function showNextQuestion() {
+      // 次の問題に進むための処理をここに記述
+      // 例: 画像を更新する、正解を変更する、など
+      window.location.href = '/run_script';
+    }
+
+    
+  </script>
+</body>
+</html>

@@ -1,11 +1,21 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     margin: 40px;
     background-color: #f4f4f4;
-}
+} */
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
 
 form {
     margin-top: 20px;
+    text-align: center;
 }
 
 input, button {
@@ -18,8 +28,18 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: transform 0.2s;
 }
 
 button:hover {
     background-color: #45a049;
 }
+
+button:active {
+    transform: scale(0.90); /* 0.95倍に縮小 */
+}
+
+h1{
+    text-align: center;
+}
+
