@@ -52,7 +52,7 @@ class test_dataset(Dataset):
     #    print(img_path)
        image = Image.open(os.path.join(self.root,img_path)).convert('RGB') 
        img = self.transform(image) 
-       return img, targets, labels
+       return img_path,img, targets, labels
     
     def __len__(self):
         return len(self.images)       
