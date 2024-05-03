@@ -13,13 +13,13 @@ import random
 
 
 class test_dataset(Dataset):
-    def __init__(self, root, transform, num_class):    
+    def __init__(self, root, transform, num_class,random_numbers):    
        self.root = root
        self.transform = transform
        self.target = []
        self.label = []
        self.images = [] 
-       random_numbers = random.sample(range(10), 4)#randamな4要素の配列
+       self.random_numbers =random_numbers 
     #    print(random_numbers) 
        target_dic=['ホホジロザメ', 'シュモクザメ', 'ダチョウ', 'カササギ', 'フクロウ', \
        'コウノトリ', 'フラミンゴ', 'トラ猫', '木彫り兎', '牛']
@@ -29,7 +29,7 @@ class test_dataset(Dataset):
        label2_dic=[3,5,10,19,23,129,131,284,332,346]
        for i in range(0, num_class):
            j=0
-           for k in random_numbers:
+           for k in self.random_numbers:
                 j+=1
                 if j!=4:
                     self.target.append(target_dic[i])
@@ -55,10 +55,11 @@ class test_dataset(Dataset):
     
 
 class test_dataloader():  
-    def __init__(self, root, batch_size, num_class):    
+    def __init__(self, root, batch_size, num_class,random_numbers):    
         self.batch_size = batch_size
         self.num_class = num_class
         self.root = root
+        self.random_numbers =random_numbers 
         self.transform = transforms.Compose([
             transforms.CenterCrop(224),
             transforms.ToTensor()
@@ -66,7 +67,7 @@ class test_dataloader():
         
     def run(self,pred=[],prob=[],paths=[]):        
         test_datasets = test_dataset(self.root, transform=self.transform,
-                                     num_class=self.num_class)
+                                     num_class=self.num_class,random_numbers=self.random_numbers)
         test_loader = DataLoader(
             dataset=test_datasets, 
             batch_size=self.batch_size,
