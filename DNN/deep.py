@@ -12,12 +12,20 @@ import torchvision
 import torchvision.models as models
 from dataloader import test_dataloader
 
+model_name= 'AlexNet'
 dir_path = './dataset'
 batch_size = 4
 num_sample = 10
 class_num = 10
 random_numbers=random.sample(range(10), 4)
 
+# モデル名と種類の種類の辞書
+model_type = {
+    'ResNet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'),
+    'ResNet18': models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1'),
+    'VGG16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'),
+    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'),
+}
 
 # ネットワークの予測を出力
 def test(net, loader):
@@ -26,7 +34,7 @@ def test(net, loader):
     targes_list=[]
     images_list=[]
     with torch.no_grad():
-        for batch_idx, (img_path, inputs, targets, labels) in enumerate(loader):
+        for _, (img_path, inputs, targets, _) in enumerate(loader):
             # DNNの予測
             outputs = net(inputs)
             # 予測を確率に
@@ -40,27 +48,17 @@ def test(net, loader):
             # バッチ内で最も予測確率が高いクラスの中で，
             # 最も予測確率が低いサンプルのインデックスを取得し，リストとして保存
             min_index_list.append(int(min_index[predicted]))
-            # 
+            # 正解ラベルをリストとして保存
             targes_list.append(targets)
+            # 写真へのパスを保存
             images_list.append(img_path)
 
     return min_index_list, targes_list, images_list
 
-# モデル選択
-
-model_name = {
-    'ResNet18': models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1'),
-    'VGG16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'),
-    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'),
-}
-
+# モデルのダウンロード
 def create_model(models_name):
-    # model = models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')
-    # model = models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1')
-    model = model_name.get(models_name)
+    model = model_type.get(models_name)
     return model 
-
-
 
 # データローダーをインスタンス化
 loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
@@ -69,7 +67,7 @@ test_loader, answer_position  = loader.run()
 
 # モデルをビルド
 print('| Building net')
-net = create_model('ResNet18')
+net = create_model(model_name)
 # ネットワークの予測
 index, targes, images = test(net, test_loader)
 print(index)
