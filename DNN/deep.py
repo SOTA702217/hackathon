@@ -12,8 +12,9 @@ import torchvision
 import torchvision.models as models
 from dataloader import test_dataloader
 
-dir_path = './dataset'
+dir_path = os.path.join('.', 'dataset')
 batch_size = 4
+random_numbers=random.sample(range(10), 4)#randamな4要素の配列
 
 
 
@@ -39,9 +40,9 @@ def create_model():
     return model 
 
 
-loader = test_dataloader(root=dir_path,batch_size=batch_size, num_samples=10, num_class=10)
+loader = test_dataloader(root=dir_path,batch_size=batch_size, num_class=10,random_numbers=random_numbers)
 test_loader = loader.run()
-
+# print(random_numbers)
 print('| Building net')
 net = create_model()
 
