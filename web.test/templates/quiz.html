@@ -18,8 +18,18 @@
       border: 2px solid transparent;
     }
 
+    /* 選んだやつの外枠 */
     .image-container img.selected {
       border-color: blue;
+      border-width: 4px; /* 外枠の太さを4pxに設定 */
+      border-style: solid; /* 外枠のスタイルを実線に設定 */
+    }
+
+    /* 正解の時の外枠 */
+    .image-container img.correct {
+        border-color: red;
+        border-width: 8px; /* 外枠の太さを4pxに設定 */
+        border-style: solid; /* 外枠のスタイルを実線に設定 */
     }
 
     #result {
@@ -37,6 +47,8 @@
       margin-top: 20px;
       text-align: center;
     }
+
+
   </style>
 </head>
 <body>
@@ -56,7 +68,7 @@
     <button onclick="showNextQuestion()">次へ</button>
   </div>
 
-  <script>
+  <!-- <script>
     let correctAnswer = 3; // 正解の画像番号（0から始まる）
 
     function checkAnswer(img) {
@@ -88,6 +100,83 @@
     }
 
     
-  </script>
+  </script> -->
+  <script>
+    let quizzes = {{ quizzes|tojson }};
+    let currentQuizIndex = 0;
+    let correctAnswer;
+    let images;
+
+    function loadQuiz() {
+        let quiz = quizzes[currentQuizIndex];
+        correctAnswer = quiz.correct_answer;
+        let imageContainer = document.querySelector('.image-container');
+        imageContainer.innerHTML = '';
+        images = [];
+
+        quiz.image_paths.forEach((path, index) => {
+            let img = document.createElement('img');
+            img.src = `{{ url_for('static', filename='') }}${path}`;
+            img.onclick = () => checkAnswer(img);
+            imageContainer.appendChild(img);
+            images.push(img);
+        });
+    }
+
+    loadQuiz();
+
+    function checkAnswer(img) {
+        // 既存の処理...
+        images.forEach(img => {
+            img.classList.remove('selected');
+            img.onclick = null; // イベントハンドラを無効化
+        });
+        img.classList.add('selected');
+
+        let selectedIndex = images.indexOf(img);
+        let result = document.getElementById('result');
+
+        if (selectedIndex === correctAnswer) {
+            result.textContent = '正解！';
+        } else {
+            result.textContent = '不正解...';
+        }
+
+        images[correctAnswer].classList.add('correct');
+
+        // 次に進むボタンの表示を制御
+        if (currentQuizIndex === quizzes.length - 1) {
+            // 最後のクイズの場合
+            document.getElementById('next-btn').innerHTML = '<button onclick="redirectToRunScript()">結果を見る</button>';
+        } else {
+            document.getElementById('next-btn').innerHTML = '<button onclick="showNextQuestion()">次へ</button>';
+        }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function showNextQuestion() {
+        currentQuizIndex++;
+        if (currentQuizIndex < quizzes.length) {
+            loadQuiz();
+            document.getElementById('result').textContent = ''; // 結果をクリア
+            document.getElementById('next-btn').style.display = 'none'; // 次に進むボタンを非表示にする
+            
+            // 画像の選択状態をリセット
+            images.forEach(img => {
+                img.classList.remove('selected');
+                img.onclick = () => checkAnswer(img); // イベントハンドラを再度有効化
+            });
+        } else {
+            // すべてのクイズが終了した場合の処理
+            window.location.href = '/run_script';
+        }
+    }
+
+    function redirectToRunScript() {
+        // /run_scriptに移動
+        window.location.href = '/run_script';
+    }
+</script>
+
 </body>
 </html>

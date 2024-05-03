@@ -45,13 +45,47 @@ def index():
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
-    image_paths = [
-        '/imgs/image1.jpg',
-        '/imgs/image2.jpg',
-        '/imgs/image3.jpg',
-        '/imgs/image4.jpg'
+    quizzes = [
+        {
+            'image_paths': [
+                '/imgs/image1.jpg',
+                '/imgs/image2.jpg',
+                '/imgs/image3.jpg',
+                '/imgs/image4.jpg'
+            ],
+            'correct_answer': 3
+        },
+        {
+            'image_paths': [
+                '/imgs/image5.jpg',
+                '/imgs/image6.jpg',
+                '/imgs/image7.jpg',
+                '/imgs/image8.jpg'
+            ],
+            'correct_answer': 1
+        },
+        {
+            'image_paths': [
+                '/imgs/image5.jpg',
+                '/imgs/image6.jpg',
+                '/imgs/image7.jpg',
+                '/imgs/image8.jpg'
+            ],
+            'correct_answer': 1
+        }
     ]
-    return render_template('quiz.html',image_paths=image_paths)
+    return render_template('quiz.html', quizzes=quizzes)
+
+# @app.route('/quiz', methods=['POST'])
+# def quiz():
+
+#     image_paths = [
+#         '/imgs/image1.jpg',
+#         '/imgs/image2.jpg',
+#         '/imgs/image3.jpg',
+#         '/imgs/image4.jpg'
+#     ]
+#     return render_template('quiz.html',image_paths=image_paths)
 
 @app.route('/run_script', methods=['GET', 'POST'])
 def run_script():
