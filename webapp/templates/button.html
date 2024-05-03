@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Pythonスクリプトを実行してください</h1>
+    <h1>モデルを選択してください</h1>
     <form action="/run_script" method="post">
-        <button type="submit">スクリプトを実行</button>
+        <label for="model_select">モデルを選択:</label>
+        <select name="model_name" id="model_select">
+            <option value="ResNet50">ResNet50(期待値：80.9%)</option>
+            <option value="ResNet18">ResNet18(期待値：69.8%)</option>
+            <option value="VGG16">VGG16(期待値：71.6%)</option>
+            <option value="AlexNet">AlexNet(期待値：56.5%)</option>
+        </select>
+        <button type="submit">実行</button>
     </form>
+    
 </body>
 </html>

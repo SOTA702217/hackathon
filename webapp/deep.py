@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
 import torch
 import random
 import os
@@ -18,15 +24,8 @@ model_type = {
     'ResNet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'),
     'ResNet18': models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1'),
     'VGG16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'),
-    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1')
+    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'),
 }
-
-import os
-from flask import Flask, request, render_template, redirect, url_for, jsonify
-from PIL import Image
-from werkzeug.utils import secure_filename
-
-app = Flask(__name__)
 
 # ネットワークの予測を出力
 def test(net, loader):
@@ -61,41 +60,16 @@ def create_model(models_name):
     model = model_type.get(models_name)
     return model 
 
-@app.route('/')
-def index():
-    return render_template('button.html')
+# データローダーをインスタンス化
+loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
+# データローダー作成
+test_loader, answer_position  = loader.run()
 
-@app.route('/run_script', methods=['POST'])
-def run_script():
-     # ユーザーが選択したモデル名を取得
-    model_name = request.form.get('model_name')
-
-   # データローダーをインスタンス化
-    loader = test_dataloader(root=dir_path,batch_size=batch_size,  num_class=class_num, random_numbers=random_numbers)
-    # データローダー作成
-    test_loader, answer_position  = loader.run()
-
-    # print('| Building net')
-    net = create_model(model_name)
-
-    index, targes, images = test(net, test_loader)
-    # print(index)
-    # print(targes)
-    # print(images)
-    # print(answer_position)
-
-    count=sum(a==b for a,b in  zip(index,answer_position))
-    par=int(count*10)
-   
-    result = {
-            '予測画像': index,
-            'ラベル': targes,
-            'パス': images,
-            '正解バッチ': answer_position,
-            '正解率': str(par)+'%'
-        }
-    
-    return render_template('result.html', result=result)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# モデルをビルド
+print('| Building net')
+net = create_model(model_name)
+# ネットワークの予測
+index, targes, images = test(net, test_loader)
+print(index)
+print(targes)
+print(images)

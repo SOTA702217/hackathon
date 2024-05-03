@@ -40,7 +40,7 @@ class test_dataset(Dataset):
                     self.label.append(label_dic[i])
                     self.images.append(os.path.join(target_dic[i], str(k)+'.JPEG'))
                 else:
-                    print(l)
+                    # print(l)
                     self.target.append(target2_dic[i])
                     self.label.append(label2_dic[i])
                     self.images.append(os.path.join(target2_dic[i], str(k)+'.JPEG'))
