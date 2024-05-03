@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
 import torch
 import random
 import os
@@ -18,8 +12,13 @@ num_sample = 10
 class_num = 10
 random_numbers=random.sample(range(10), 4)
 
+import os
+from flask import Flask, request, render_template, redirect, url_for, jsonify
+from PIL import Image
+from werkzeug.utils import secure_filename
 
-# ネットワークの予測を出力
+app = Flask(__name__)
+
 def test(net, loader):
     net.eval()
     min_index_list=[]
@@ -51,30 +50,62 @@ def create_model():
     model = models.resnet50(pretrained=True)
     return model 
 
-# model_name = {
-#     'ResNet50': [models.resnet50(pretrained=True)],
-#     'VGG16': [models.alexnet('resnet18', cifar=True)],
-#     'bigresnet50': [resnet.ResNet('resnet18', cifar=True), 2048],
-#     'bigresnet18_preact': [preact_resnet.ResNet18, 512],
-#     'resnet18': [resnet.ResNet('resnet18'), 512],
-#     'resnet34': [resnet.ResNet('resnet34'), 512],
-#     'resnet50': [resnet.ResNet('resnet50'), 2048],
-#     # 追加
-#     'Coresnet50': [resnet.ResNet('resnet50', preact=True), 2048],
+@app.route('/')
+def index():
+    return render_template('button.html')
+
+@app.route('/run_script', methods=['POST'])
+def run_script():
+
+    # データローダーをインスタンス化
+    data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
+
+    # run メソッドを呼び出してデータローダーと解答位置を取得
+    test_loader, answer_position = data_loader_instance.run()
+
+    print('| Building net')
+    net = create_model()
+
+    index, targes, images = test(net, test_loader)
+    print(index)
+    print(targes)
+    print(images)
+    print(answer_position)
+   
+#     results = {
+#     '使用した重み': opt.pth_path2,
+#     '処理時間（秒）': training_time,
+#     'TPR-FPR': TPR - FPR,
+#     'TP': int(TP),  # NumPy int64 to Python int
+#     'FN': int(FN),
+#     'FP': int(FP),
+#     'TN': int(TN)
 # }
 
-# データローダーをインスタンス化
-# データローダーをインスタンス化
-data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
+#     if TP != 0:
+#         results.update({
+#             '精度': float(accuracy_score(y_true, y_pred)),  # Ensure it's a standard float
+#             '適合率': float(precision_score(y_true, y_pred)),
+#             '再現率': float(recall_score(y_true, y_pred)),
+#             'F値': float(f1_score(y_true, y_pred)),
+#             '特異度': float(TN / (TN + FP))  # Calculate and convert to float
+#         })
+    result = {
+            '使用した重み': './ResNet10/1/Discriminator-best2.pth',
+            '処理時間（秒）': 0.3628864288330078,
+            'TPR-FPR': 0.6666666666666667,
+            'TP': 2,
+            'FN': 0,
+            'FP': 1,
+            'TN': 2,
+            '精度': 0.8,
+            '適合率': 0.6666666666666666,
+            '再現率': 1.0,
+            'F値': 0.8,
+            '特異度': 0.6666666666666666
+        }
+    
+    return render_template('result.html', result=result)
 
-# run メソッドを呼び出してデータローダーと解答位置を取得
-test_loader, answer_position = data_loader_instance.run()
-
-
-print('| Building net')
-net = create_model()
-
-index, targes, images = test(net, test_loader)
-print(index)
-print(targes)
-print(images)
+if __name__ == '__main__':
+    app.run(debug=True)
