@@ -10,9 +10,12 @@
       margin-bottom: 20px;
       background-color:#f2f2f2; /* 背景色を薄いグレーに設定 */
       border-radius: 10px;
-      max-width: 1000px; /* 最大幅を800pxに設定 */
+      max-width: var(--image-width); /* 最大幅を800pxに設定 */
+      max-height: var(--image-Height);
       margin-left: auto; /* 左右に同じ余白を持たせる */
       margin-right: auto; /* 左右に同じ余白を持たせる */
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
 
     .image-row {
@@ -118,6 +121,17 @@
     let images;
     let playerScore = 0; // プレイヤーの正解数
     let aiScore = 0; // AIの正解数
+    var batch_size={{batch_size}};
+
+    let width_size = str(batch_size*205);
+    let height_size= str(205);
+    if (bath_size>5){
+      width_size = str(int(batch_size/2 + 0.6) * 205)
+      height_size = str(205 * 2)
+    }
+
+    document.documentElement.style.setProperty('--max-width', width_size + 'px');
+    document.documentElement.style.setProperty('--max-height', height_size + 'px');
 
     function loadQuiz() {
         let quiz = quizzes[currentQuizIndex];
