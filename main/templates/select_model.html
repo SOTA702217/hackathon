@@ -1,103 +1,119 @@
-<!DOCTYPE html> <!-- HTMLドキュメントのタイプとバージョンを宣言 -->
-<html lang="ja">  <!-- 日本語の言語設定でHTML要素を開始 -->
+<!DOCTYPE html> <!-- HTML5文書宣言 -->
+<html lang="ja">  <!-- ドキュメントの言語を日本語に設定 -->
 <head>
     <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ページがレスポンシブであることを保証 -->
-    <title>Select setting</title> <!-- ウェブページのタイトルを設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- レスポンシブデザイン用のビューポート設定 -->
+    <title>Select setting</title> <!-- ページタイトルを設定 -->
     <style>
+        /* 以下、ページ全体のスタイリング */
         body {
-            font-family: Arial, sans-serif; /* フォントファミリーを指定 */
+            font-family: Arial, sans-serif; /* テキストのフォントファミリーを設定 */
             text-align: center; /* テキストを中央揃えに */
         }
         h1 {
-            margin-top: 50px; /* 見出しに上マージンを設定 */
+            margin-top: 50px; /* 見出しの上に余白を設定 */
         }
         .button-container {
-            display: flex; /* Flexboxを使用してレイアウトを設定 */
-            justify-content: center; /* ボタンを水平方向に中央揃えに */
-            margin-top: 50px; /* コンテナに上マージンを設定 */
+            display: flex; /* Flexboxを使用してアイテムを横並びに配置 */
+            justify-content: center; /* 水平方向の中央揃えを行う */
+            margin-top: 50px; /* 上部の余白を設定 */
         }
         .model-button {
-            font-size: 1.5rem; /* ボタンのフォントサイズを設定 */
-            padding: 1rem 2rem; /* ボタン内のパディングを設定 */
-            margin: 0 20px; /* ボタンの周りのマージンを設定 */
+            position: relative; /* 相対位置を指定、ツールチップの基点となる */
+            font-size: 1.5rem; /* ボタンのフォントサイズを大きく設定 */
+            padding: 1rem 2rem; /* パディングでボタン内の空間を調整 */
+            margin: 0 20px; /* ボタン間の余白を設定 */
             border: none; /* ボーダーを非表示に */
-            border-radius: 50px; /* ボタンの角を丸くする */
-            color: white; /* テキストカラーを白に設定 */
-            cursor: pointer; /* カーソルをポインターに設定してクリック可能であることを示す */
-            transition: background-color 0.3s; /* 背景色の変化にトランジション効果を追加 */
+            border-radius: 50px; /* 角を丸くする */
+            color: white; /* テキストカラーを白に */
+            cursor: pointer; /* カーソルを指マークに */
+            transition: background-color 0.3s; /* 背景色変化のアニメーション効果 */
         }
         .model-button:hover {
-            opacity: 0.8; /* ホバー時にボタンの不透明度を変更 */
+            opacity: 0.8; /* ホバー時にボタンの透明度を下げる */
+        }
+        .model-button:hover::after {
+            content: attr(data-tooltip); /* ツールチップの内容をdata-tooltip属性から取得 */
+            position: absolute; /* 絶対位置を指定 */
+            white-space: pre-line; /* 改行を保持する設定 */
+            background-color: rgba(0, 0, 0, 0.8); /* 背景色を半透明の黒に */
+            color: white; /* テキストカラーを白に */
+            padding: 10px; /* 内側の余白 */
+            border-radius: 4px; /* 角を丸く */
+            z-index: 100; /* 重なり順位 */
+            width: 200px; /* 幅を200pxに設定 */
+            font-size: 0.8rem; /* フォントサイズを小さく設定 */
+            transform: translateX(-50%); /* X軸方向に左に50%ずらす */
+            left: 50%; /* 左から50%の位置に配置 */
+            bottom:-70%; /* 下から-70%の位置に配置 */
         }
         .model-button.selected {
-            transform: scale(1.1);
-            border: 4px solid #FFD700;
-            box-shadow: 0 0 10px #FFD700;
+            transform: scale(1.1); /* 選択されたボタンを大きく表示 */
+            border: 4px solid #FFD700; /* 黄色の太いボーダーを追加 */
+            box-shadow: 0 0 10px #FFD700; /* 黄色の影を追加 */
         }
+        /* 各モデルボタンの背景色設定 */
         .resnet50 {
-            background-color: #F44336; /* ResNet50ボタンの背景色を設定 */
+            background-color: #F44336; /* 赤色 */
         }
         .vgg16 {
-            background-color: #FF9800; /* VGG16ボタンの背景色を設定 */
+            background-color: #FF9800; /* オレンジ色 */
         }
         .alexnet {
-            background-color: #4CAF50; /* AlexNetボタンの背景色を設定 */
+            background-color: #4CAF50; /* 緑色 */
         }
         .efficientnet-b7 {
-            background-color: #9C27B0; /* EfficientNet-B7ボタンの背景色を設定 */
+            background-color: #9C27B0; /* 紫色 */
         }
 
+        /* 画像枚数選択ボタンのスタイリング */
         .image-count-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
+            display: flex; /* Flexboxで横並び */
+            justify-content: center; /* 中央揃え */
+            margin-top: 30px; /* 上部の余白 */
         }
-
         .image-count-button {
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            margin: 0 10px;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            background-color: #2196F3;
+            font-size: 1rem; /* フォントサイズを設定 */
+            padding: 0.5rem 1rem; /* 内側のパディング */
+            margin: 0 10px; /* 間隔 */
+            border: none; /* ボーダーなし */
+            border-radius: 50px; /* 角を丸く */
+            color: white; /* テキストカラーを白に */
+            cursor: pointer; /* カーソルを指マークに */
+            transition: background-color 0.3s, transform 0.3s; /* 背景色とサイズ変化のアニメーション */
+            background-color: #2196F3; /* 青色 */
         }
-
         .image-count-button:hover {
-            opacity: 0.8;
+            opacity: 0.8; /* ホバー時の透明度変更 */
         }
-
         .image-count-button.selected {
-            transform: scale(1.1);
-            border: 4px solid #FFD700;
-            box-shadow: 0 0 10px #FFD700;
+            transform: scale(1.1); /* 選択時に拡大表示 */
+            border: 4px solid #FFD700; /* 黄色のボーダーを追加 */
+            box-shadow: 0 0 10px #FFD700; /* 黄色の影を追加 */
         }
-
+        /* サブタイトルとスタートボタンのスタイリング */
         h2 {
-            font-size: 2.0rem;
-            text-align: center;
-            margin-top: 50px;
-            color: #333;
+            font-size: 2.0rem; /* サブタイトルのフォントサイズ */
+            text-align: center; /* 中央揃え */
+            margin-top: 50px; /* 上部の余白 */
+            color: #333; /* 色を灰色に設定 */
         }
-
         .start-button {
-            font-size: 1.5rem;
-            padding: 1rem 2rem;
-            margin-top: 50px;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
-            background-color: #4CAF50;
-            transition: background-color 0.3s;
+            font-size: 1.5rem; /* フォントサイズ */
+            padding: 1rem 2rem; /* パディング */
+            margin-top: 50px; /* 上部の余白 */
+            border: none; /* ボーダーなし */
+            border-radius: 50px; /* 角を丸く */
+            color: white; /* テキストカラーを白に */
+            cursor: pointer; /* カーソルを指マークに */
+            background-color: #4CAF50; /* 緑色 */
+            transition: background-color 0.3s; /* 背景色変化のアニメーション */
         }
-
         .start-button:hover {
-            background-color: #45a049;
+            background-color: #45a049; /* ホバー時に色を暗く */
+            transform: scale(1.1); /* ボタンを拡大表示 */
         }
+        
     </style>
 </head>
 <body>
@@ -105,11 +121,18 @@
     <form action="/quiz" method="post">
         <input type="text" name="name" placeholder="あなたの名前" required> <!-- 名前入力フィールド -->
     <h1>モデルを選択してください</h1>
-    <div class="button-container">
-        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)<br>(score1倍)</button>
-        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)<br>(score2倍)</button>
-        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)<br>(score3倍)</button>
-        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)<br>(score4倍)</button>
+    <button type="button" class="model-button alexnet selected" data-model="alexnet" data-tooltip="AlexNetは2012年に開発されたモデルで、画像認識の分野で革命をもたらしました。シンプルな構造でありながら、当時としては非常に高い精度を達成しました。">
+        Easy<br>AlexNet<br>(2012)<br>(score1倍)
+    </button>
+    <button type="button" class="model-button vgg16" data-model="vgg16" data-tooltip="VGG16は2014年に開発されたモデルで、より多くの畳み込み層を使用しているため、高いレベルの画像特徴を抽出できます。">
+        Normal<br>VGG16<br>(2014)<br>(score2倍)
+    </button>
+    <button type="button" class="model-button resnet50" data-model="resnet50" data-tooltip="ResNet50は「残差ネットワーク」として知られ、2015年に開発されました。非常に深いネットワークが可能です。">
+        Hard<br>ResNet50<br>(2015)<br>(score3倍)
+    </button>
+    <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7" data-tooltip="EfficientNet-B7は2019年に開発され、スケーラビリティと効率の良さで知られます。非常に高い効率と精度を提供します。">
+        Very Hard<br>EfficientNet-B7<br>(2019)<br>(score4倍)
+    </button>
     </div>
 
     <h2>画像の枚数を選択してください</h2>

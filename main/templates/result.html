@@ -22,10 +22,12 @@
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            opacity: 0;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
         }
         a:hover {
             background-color: #45a049;
+            transform: scale(1.1); /* ホバーで少し大きく */
         }
         .fade-in {
             animation: fadeIn ease 1s forwards; /* フェードインアニメーションの設定 */
@@ -68,12 +70,16 @@
             position: relative; /* ボタンの位置を通常の文書フローに戻す */
             z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
         }
+        #view-rankings {
+            position: relative; /* ボタンの位置を通常の文書フローに戻す */
+            z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
+        }
     </style>
 </head>
 <body>
     <h1 id="player-name">{{ player_name }} さん</h1>
     <h1 id="player-score">プレイヤーの得点: {{ player_score }}点！</h1>
-    <h1 id="ai-score">AIの得点: {{ ai_score }}！</h1>
+    <h1 id="ai-score">AIの得点: {{ ai_score }}点！</h1>
     <h1 id="result">
         {% if ai_score > player_score %}
             AIの勝ち！ <!-- AIが勝った場合の表示 -->
