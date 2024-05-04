@@ -104,18 +104,51 @@
     <h1>あなたの名前を入力してください</h1> <!-- メインの見出しを表示 -->
     <form action="/quiz" method="post">
         <input type="text" name="name" placeholder="あなたの名前" required> <!-- 名前入力フィールド -->
-    <h1>モデルを選択してください</h1> <!-- メインの見出しを表示 -->
-    <form action="/quiz" method="post"> <!-- データを'/quiz'にポストするフォームを開始 -->
-        <div class="button-container"> <!-- ボタンのコンテナ -->
-            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button> <!-- AlexNetを選択するためのボタン -->
-            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16<br>(2014)</button> <!-- VGG16を選択するためのボタン -->
-            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50<br>(2015)</button> <!-- ResNet50を選択するためのボタン -->
-            <button type="submit" name="model" value="efficientnet-b7" class="model-button efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button> <!-- EfficientNet-B7を選択するためのボタン -->
-        </div>
+    <h1>モデルを選択してください</h1>
+    <div class="button-container">
+        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)</button>
+        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)</button>
+        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)</button>
+        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button>
+    </div>
+
+    <h2>画像の枚数を選択してください</h2>
+    <div class="image-count-container">
+        <button type="button" class="image-count-button selected" data-count="4">4枚</button>
+        <button type="button" class="image-count-button" data-count="6">6枚</button>
+        <button type="button" class="image-count-button" data-count="8">8枚</button>
+        <button type="button" class="image-count-button" data-count="10">10枚</button>
+    </div>
+
+    <form action="/quiz" method="post">
+        <input type="hidden" name="model" id="model-input" value="alexnet">
+        <input type="hidden" name="image_count" id="image-count-input" value="4">
+        <button type="submit" class="start-button">スタート</button>
     </form>
     <a href="/" onclick="goBack()" id="back-button">戻る</a>
 
     <script>
+        const modelButtons = document.querySelectorAll('.model-button');
+        const modelInput = document.getElementById('model-input');
+
+        modelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                modelButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                modelInput.value = this.getAttribute('data-model');
+            });
+        });
+
+        const imageCountButtons = document.querySelectorAll('.image-count-button');
+        const imageCountInput = document.getElementById('image-count-input');
+
+        imageCountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                imageCountButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                imageCountInput.value = this.getAttribute('data-count');
+            });
+        });
         function goBack() {
             window.history.back();
         }
