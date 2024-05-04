@@ -82,11 +82,12 @@ class test_dataloader():
             transforms.ToTensor()
         ])
     
-    # データセットの作成
+    # データの準備
     def run(self): 
-        # データセットの       
+        # データセットの作成
         test_datasets = test_dataset(self.root, transform=self.transform,
                                      num_class=self.num_class,random_numbers=self.random_numbers, batch_size=self.batch_size)
+        # データローダーの作成
         test_loader = DataLoader(
             dataset=test_datasets, 
             batch_size=self.batch_size,
