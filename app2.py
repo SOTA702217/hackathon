@@ -97,7 +97,7 @@ def quiz():
 
     print('| Building net')
     # net = create_model()
-    model = model_type.get(models_name)
+    model = model_type.get(select_model)
 
     # predict_pos : AIの予測位置
     # label : ラベル
