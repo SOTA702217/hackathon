@@ -61,7 +61,7 @@ class test_dataset(Dataset):
        img = self.transform(image) 
        # returnはそれぞれ，画像へのパス，画像，正解ラベル，正解インデックス
        return img_path, img, targets, labels
-    
+    # サンプル数の長さ
     def __len__(self):
         return len(self.images)       
     
