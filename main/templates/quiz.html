@@ -10,12 +10,12 @@
       margin-bottom: 20px;
       background-color:#f2f2f2; /* 背景色を薄いグレーに設定 */
       border-radius: 10px;
-      max-width: var(--image-width); /* 最大幅を800pxに設定 */
-      max-height: var(--image-Height);
+      max-width: 1000px;
+      /* max-height: var(--image-height); */
       margin-left: auto; /* 左右に同じ余白を持たせる */
       margin-right: auto; /* 左右に同じ余白を持たせる */
-      flex-wrap: wrap;
-      justify-content: space-between;
+      /* flex-wrap: wrap;
+      justify-content: space-between; */
     }
 
     .image-row {
@@ -130,8 +130,9 @@
       height_size = str(205 * 2)
     }
 
-    document.documentElement.style.setProperty('--max-width', width_size + 'px');
-    document.documentElement.style.setProperty('--max-height', height_size + 'px');
+
+    // document.documentElement.style.setProperty('--max-width', '1000px');
+    // document.documentElement.style.setProperty('--max-height', '1000px');
 
     function loadQuiz() {
         let quiz = quizzes[currentQuizIndex];
@@ -181,6 +182,8 @@
 
         // 画像とキャプションの表示
         let imageContainer = document.getElementById('image-container');
+        // let maxWidth = '1200px';
+        // imageContainer.style.maxWidth = maxWidth;
         imageContainer.innerHTML = '';
 
         let imageRow = document.createElement('div');
