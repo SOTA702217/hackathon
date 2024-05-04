@@ -29,13 +29,17 @@ import random
 # app = Flask(__name__, static_folder = "./static/")
 app = Flask(__name__)
 
+# データセットへのパス
 dir_path = './static/dataset'
+# 一度に表示する画像の枚数
 batch_size = 4
+# 各クラスの写真枚数
 num_sample = 10
+# クラス数(問題数に対応)
 class_num = 10
-random_numbers=random.sample(range(10), 4)
+random_numbers=random.sample(range(num_sample), batch_size)
 
-
+# モデル名とダウンロードするモデルを対応させる辞書
 model_type = {
     'alexnet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'), # top1:56.5
     'vgg16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'), # top1:69.8  
@@ -50,7 +54,7 @@ def test(net, loader):
     targes_list=[]
     images_list=[]
     with torch.no_grad():
-        for batch_idx, (img_path, inputs, targets, labels) in enumerate(loader):
+        for _, (img_path, inputs, targets, _) in enumerate(loader):
             # DNNの予測
             outputs = net(inputs)
             # 予測を確率に
@@ -64,16 +68,12 @@ def test(net, loader):
             # バッチ内で最も予測確率が高いクラスの中で，
             # 最も予測確率が低いサンプルのインデックスを取得し，リストとして保存
             min_index_list.append(int(min_index[predicted]))
-            # 
+            # 正解ラベルをリストとして保存
             targes_list.append(targets)
+            # 写真へのパスを保存
             images_list.append(img_path)
 
     return min_index_list, targes_list, images_list
-
-# モデルをビルド
-# def create_model():
-#     model = models.resnet50(pretrained=True)
-#     return model 
 
 def create_model(models_name):
     model = model_type.get(models_name)
@@ -96,7 +96,7 @@ def quiz():
     # run メソッドを呼び出してデータローダーと解答位置を取得
     test_loader, answer_pos = data_loader_instance.run()
 
-    print('| Building net')
+    # モデルをビルド
     net = create_model(selected_model)
 
     # predict_pos : AIの予測位置
