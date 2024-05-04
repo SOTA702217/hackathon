@@ -14,9 +14,6 @@ from torchvision import transforms
 from torchvision import models
 # import glob
 
-import time
-# import psutil
-
 import os
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 from PIL import Image
@@ -24,10 +21,32 @@ from werkzeug.utils import secure_filename
 
 from data_loader import test_dataloader
 import random
+import csv
+import os
+
+
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+# データベース設定
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rankings.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class Ranking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player_name = db.Column(db.String(80), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<Ranking {self.player_name} score {self.score}>"
+
+with app.app_context():
+    db.create_all()
+
 
 # static_folderを指定しているのは、画像ファイルを表示するため
 # app = Flask(__name__, static_folder = "./static/")
-app = Flask(__name__)
 
 dir_path = './static/dataset'
 batch_size = 4
@@ -42,6 +61,16 @@ model_type = {
     'resnet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'), # top1:80.9
     'efficientnet-b7': models.efficientnet_b7(weights='EfficientNet_B7_Weights.IMAGENET1K_V1') # top1:84.1
 }
+
+def add_ranking(player_name, score):
+    new_ranking = Ranking(player_name=player_name, score=score)
+    db.session.add(new_ranking)
+    db.session.commit()
+
+def get_rankings():
+    rankings = Ranking.query.order_by(Ranking.score.desc()).all()
+    return rankings
+
 
 
 def test(net, loader):
@@ -89,6 +118,7 @@ def select_model():
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
+    player_name = request.form['name']
     selected_model = request.form['model']
         # データローダーをインスタンス化
     data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
@@ -124,14 +154,40 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes)
+    # print(player_name)
+    return render_template('quiz.html',player_name=player_name, quizzes=quizzes)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
-    player_score = request.args.get('playerScore', 0, type=int)
-    ai_score = request.args.get('aiScore', 0, type=int)
-    
-    return render_template('result.html', player_score=player_score, ai_score=ai_score)
+    # if request.method == 'POST':
+    #     player_name = request.form.get('player_name', type=str)
+    #     player_score = request.form.get('playerScore', type=int)
+        
+       
+    #     return redirect(url_for('show_rankings'))  # ランキングページにリダイレクト
+
+    player_name = request.args.get('player_name', default="", type=str)
+    player_score = request.args.get('playerScore', default=0, type=int)
+    ai_score = request.args.get('aiScore', default=0, type=int)
+    add_ranking(player_name, player_score)  # データベースにランキングを追加
+        
+    return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score)
+
+@app.route('/rankings')
+def show_rankings():
+    player_name = request.args.get('player_name', default="", type=str)
+    player_score = request.args.get('playerScore', default=0, type=int)
+    ai_score = request.args.get('aiScore', default=0, type=int)
+    rankings = get_rankings()
+    return render_template('rankings.html', player_name=player_name, player_score=player_score, ai_score=ai_score,rankings=rankings)
+
+@app.route('/submit', methods=['POST'])
+def submit_result():
+    player_name = request.form['player_name']
+    score = int(request.form['score'])
+    add_ranking(player_name, score)
+    return redirect(url_for('show_rankings'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

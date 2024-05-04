@@ -1,49 +1,5 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>結果</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        h1 {
-            margin-bottom: 30px;
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        a:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-    <h1>プレイヤーの正解数: {{ player_score }} / 10</h1>
-    <h1>AIの正解数: {{ ai_score }} / 10</h1>
-    {% if ai_score > player_score %}
-        <h1>AIの勝ち！</h1>
-    {% elif player_score > ai_score %}
-        <h1>人間の勝ち！</h1>
-    {% else %}
-        <h1>引き分け！</h1>
-    {% endif %}
-    <a href="/">戻る</a>
-
-</body>
-</html> -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,6 +37,7 @@
     </style>
 </head>
 <body>
+    <h1 id="player-name">{{ player_name }} さん</h1>
     <h1 id="player-score">プレイヤーの正解数: {{ player_score }} / 10</h1>
     <h1 id="ai-score">AIの正解数: {{ ai_score }} / 10</h1>
     <h1 id="result">
@@ -93,21 +50,16 @@
         {% endif %}
     </h1>
     <a href="/" id="back-link">戻る</a>
+    <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク追加 -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.getElementById('player-score').classList.add('fade-in');
-            }, 500);
-            setTimeout(function() {
-                document.getElementById('ai-score').classList.add('fade-in');
-            }, 1500);
-            setTimeout(function() {
-                document.getElementById('result').classList.add('fade-in');
-            }, 2500);
-            setTimeout(function() {
-                document.getElementById('back-link').classList.add('fade-in');
-            }, 3500);
+            setTimeout(function() { document.getElementById('player-name').classList.add('fade-in'); }, 500);
+            setTimeout(function() { document.getElementById('player-score').classList.add('fade-in'); }, 1000);
+            setTimeout(function() { document.getElementById('ai-score').classList.add('fade-in'); }, 1500);
+            setTimeout(function() { document.getElementById('result').classList.add('fade-in'); }, 2500);
+            setTimeout(function() { document.getElementById('back-link').classList.add('fade-in'); }, 3500);
+            setTimeout(function() { document.getElementById('view-rankings').classList.add('fade-in'); }, 3500); // ランキングリンクのフェードイン
         });
     </script>
 </body>

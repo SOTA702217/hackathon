@@ -1,0 +1,20 @@
+<body>
+    <h1>ランキング</h1>
+    {% if rankings %}
+    <ol>
+        {% for ranking in rankings %}
+        <li>{{ ranking.player_name }}: {{ ranking.score }}</li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>ランキングデータがありません。</p>
+    {% endif %}
+    <button href="/" id="home-link">ホームに戻る</button>
+    <button onclick="goBack()" id="back-button">戻る</button>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
