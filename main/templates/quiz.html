@@ -126,6 +126,8 @@
     let images; // 画像オブジェクトの配列
     let playerScore = 0; // プレイヤーのスコア
     let aiScore = 0; // AIのスコア
+    // let player_name='nanasi';//playername
+    var player_name="{{player_name}}";//playername
 
     function loadQuiz() {
         let quiz = quizzes[currentQuizIndex]; // 現在のクイズを取得
@@ -252,7 +254,7 @@
     }
 
     function redirectToRunScript() {
-        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`; // 結果ページのURL
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}`; // 結果ページのURL
         window.location.href = url; // URLに移動
     }
   </script>

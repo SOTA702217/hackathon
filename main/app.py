@@ -89,6 +89,7 @@ def select_model():
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
+    player_name = request.form['name']
     selected_model = request.form['model']
         # データローダーをインスタンス化
     data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
@@ -124,14 +125,16 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes)
+    # print(player_name)
+    return render_template('quiz.html',player_name=player_name, quizzes=quizzes)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
+    player_name = request.args.get('player_name', 0, type=str)
     player_score = request.args.get('playerScore', 0, type=int)
     ai_score = request.args.get('aiScore', 0, type=int)
     
-    return render_template('result.html', player_score=player_score, ai_score=ai_score)
+    return render_template('result.html',player_name=player_name, player_score=player_score, ai_score=ai_score)
 
 if __name__ == '__main__':
     app.run(debug=True)

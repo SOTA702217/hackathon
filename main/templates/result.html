@@ -37,6 +37,7 @@
     </style>
 </head>
 <body>
+    <h1 id="player-name">{{ player_name }} さん</h1> <!-- プレイヤーの名前表示 -->
     <h1 id="player-score">プレイヤーの正解数: {{ player_score }} / 10</h1> <!-- プレイヤーのスコア表示 -->
     <h1 id="ai-score">AIの正解数: {{ ai_score }} / 10</h1> <!-- AIのスコア表示 -->
     <h1 id="result">
@@ -53,6 +54,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ページが完全にロードされた後に以下の関数を実行
+            setTimeout(function() {
+                document.getElementById('player-name').classList.add('fade-in');
+            }, 500); // 500ミリ秒後にプレイヤースコアをフェードイン
             setTimeout(function() {
                 document.getElementById('player-score').classList.add('fade-in');
             }, 500); // 500ミリ秒後にプレイヤースコアをフェードイン
