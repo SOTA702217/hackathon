@@ -35,7 +35,7 @@ class test_dataset(Dataset):
         for i in range(0, num_class):
             j=0
             # 仲間外れのサンプルが何番目に来るかを乱数で決めている
-            l=random.randint(0, self.batch_size)
+            l=random.randint(0, self.batch_size-1)
             # 正解の場所がどこかを保存する
             self.answer_position.append(l)
             # random_numdersに入っている写真を取得
@@ -51,6 +51,7 @@ class test_dataset(Dataset):
                     self.label.append(label_dic_near[i])
                     self.images.append(os.path.join(target_dic_near[i], str(k)+'.JPEG'))
                 j+=1
+
     # バッチごとにサンプルを追加
     def __getitem__(self, index):  
        img_path = self.images[index]
