@@ -54,6 +54,21 @@
             right: 100px;
             transform: scale(-1, 1);
         }
+        .cracker.ai {
+            left: 10%;
+            width: 300px;
+            height: 300px;
+        }
+        .cracker.human {
+            right: 10%;
+            width: 300px;
+            height: 300px;
+        }
+        /* これを追加することで，画像とボタンが重なっても大丈夫 */
+        #back-link {
+            position: relative; /* ボタンの位置を通常の文書フローに戻す */
+            z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +87,8 @@
 
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
+    <img src="{{ url_for('static', filename='images/results/ai_win.png') }}" alt="aiwin" class="cracker ai">
+    <img src="{{ url_for('static', filename='images/results/human_lose.png') }}" alt="humanlose" class="cracker human">
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -90,6 +107,9 @@
                 if (result === '人間の勝ち！') {
                     document.querySelector('.cracker.left').classList.add('show');
                     document.querySelector('.cracker.right').classList.add('show');
+                } else if (result === 'AIの勝ち！') {
+                    document.querySelector('.cracker.ai').classList.add('show');
+                    document.querySelector('.cracker.human').classList.add('show');
                 }
             }, 3000); // 結果が表示された後にクラッカーを表示
             setTimeout(function() {
