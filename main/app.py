@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+# commit test
+>>>>>>> fa98dbfb0ce6900fedd350c5803dc356d9692a86
 import argparse
 # import glob
 # import os
@@ -35,6 +39,15 @@ num_sample = 10
 class_num = 10
 random_numbers=random.sample(range(10), 4)
 
+
+model_type = {
+    'alexnet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'), # top1:56.5
+    'vgg16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'), # top1:69.8  
+    'resnet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'), # top1:80.9
+    'efficientnet-b7': models.efficientnet_b7(weights='EfficientNet_B7_Weights.IMAGENET1K_V1') # top1:84.1
+}
+
+
 def test(net, loader):
     net.eval()
     min_index_list=[]
@@ -66,6 +79,10 @@ def test(net, loader):
 #     model = models.resnet50(pretrained=True)
 #     return model 
 
+def create_model(models_name):
+    model = model_type.get(models_name)
+    return model 
+
 @app.route('/')
 def index():
     return render_template('button.html')
@@ -84,15 +101,7 @@ def quiz():
     test_loader, answer_pos = data_loader_instance.run()
 
     print('| Building net')
-    # net = create_model()
-    if selected_model == 'resnet50':
-        net = models.resnet50(pretrained=True)
-    elif selected_model == 'vgg16':
-        net = models.vgg16(pretrained=True)
-    elif selected_model == 'alexnet':
-        net = models.alexnet(pretrained=True)
-    elif selected_model == 'efficientnet-b7':
-        net = models.efficientnet_b7(pretrained=True)
+    net = create_model(selected_model)
 
     # predict_pos : AIの予測位置
     # label : ラベル
@@ -120,17 +129,6 @@ def quiz():
     print(quizzes)
     print(len(quizzes))
     return render_template('quiz.html', quizzes=quizzes)
-
-# @app.route('/quiz', methods=['POST'])
-# def quiz():
-
-#     image_paths = [
-#         '/imgs/image1.jpg',
-#         '/imgs/image2.jpg',
-#         '/imgs/image3.jpg',
-#         '/imgs/image4.jpg'
-#     ]
-#     return render_template('quiz.html',image_paths=image_paths)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
