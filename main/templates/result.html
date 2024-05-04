@@ -34,6 +34,26 @@
             0% {opacity:0;} /* 開始時点で不透明度0 */
             100% {opacity:1;} /* 終了時点で不透明度1（完全表示） */
         }
+
+        .cracker {
+            position: absolute;
+            top: 10%;
+            /* transform: translateY(-50%); */
+            width: 500px;
+            height: 500px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .cracker.show {
+            opacity: 1;
+        }
+        .cracker.left {
+            left: 100px;
+        }
+        .cracker.right {
+            right: 100px;
+            transform: scale(-1, 1);
+        }
     </style>
 </head>
 <body>
@@ -50,6 +70,9 @@
     </h1>
     <a href="/" id="back-link">戻る</a> <!-- 「戻る」リンク -->
 
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ページが完全にロードされた後に以下の関数を実行
@@ -63,9 +86,19 @@
                 document.getElementById('result').classList.add('fade-in');
             }, 2500); // 2500ミリ秒後に結果をフェードイン
             setTimeout(function() {
+                const result = document.getElementById('result').textContent.trim();
+                if (result === '人間の勝ち！') {
+                    document.querySelector('.cracker.left').classList.add('show');
+                    document.querySelector('.cracker.right').classList.add('show');
+                }
+            }, 3000); // 結果が表示された後にクラッカーを表示
+            setTimeout(function() {
                 document.getElementById('back-link').classList.add('fade-in');
             }, 3500); // 3500ミリ秒後に「戻る」リンクをフェードイン
+            
         });
+
+
     </script>
 </body>
 </html>
