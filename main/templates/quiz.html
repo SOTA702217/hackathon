@@ -11,9 +11,12 @@
       margin-bottom: 20px; /* 下マージン */
       background-color:#f2f2f2; /* 背景色 */
       border-radius: 10px; /* 角の丸み */
-      max-width: 1000px; /* 最大幅 */
+      /* max-width: 1000px; 最大幅 */
+      max-width: var(--max-width);
+      /* max-height: var(--max-height); */
       margin-left: auto; /* 左マージンを自動 */
       margin-right: auto; /* 右マージンを自動 */
+      flex-wrap: wrap; /* 折り返し */
     }
 
     /* 画像行のスタイル設定 */
@@ -70,7 +73,7 @@
       text-align: center; /* 中央揃え */
       font-weight: bold; /* 太字 */
       font-size: 24px; /* フォントサイズ */
-      margin-bottom: 20px; /* 下マージン */
+      /* margin-bottom: 20px; 下マージン */
     }
 
     h1 {
@@ -126,6 +129,17 @@
     let images; // 画像オブジェクトの配列
     let playerScore = 0; // プレイヤーのスコア
     let aiScore = 0; // AIのスコア
+    var batch_size = {{batch_size}}; // 写真の枚数
+
+    let width_size = (batch_size * 240).toString();
+    let height_size = "205";
+    if (batch_size > 5) {
+      width_size = (Math.floor(batch_size / 2 + 0.6) * 240).toString();
+      height_size = "410";
+    }
+
+    document.documentElement.style.setProperty('--max-width', width_size+'px');
+    document.documentElement.style.setProperty('--max-height', '1500px');
 
     function loadQuiz() {
         let quiz = quizzes[currentQuizIndex]; // 現在のクイズを取得
@@ -184,7 +198,7 @@
         let selectedImageElement = document.createElement('div');
         selectedImageElement.classList.add('image-column');
         selectedImageElement.innerHTML = `
-            <img src="${images[selectedIndex].src}" width="200" height="200">
+            <img src="${images[selectedIndex].src}" width="150" height="150">
             <div class="image-caption">あなたの回答</div>
             <div><img src="{{ url_for('static', filename='images/quiz/human_correct.png') }}" alt="人間が喜ぶ" width="100" height="100"></div>
         `;
@@ -197,7 +211,7 @@
         let aiImageElement2 = document.createElement('div');
         aiImageElement2.classList.add('image-column');
         aiImageElement2.innerHTML = `
-            <img src="${images[aiAnswer].src}" width="200" height="200">
+            <img src="${images[aiAnswer].src}" width="150" height="150">
             <div class="image-caption">AIの回答</div>
             <div><img src="{{ url_for('static', filename='images/quiz/ai_correct.png') }}" alt="AIが喜ぶ" width="100" height="100"></div>
         `;

@@ -1,58 +1,150 @@
-<!DOCTYPE html> <!-- HTMLドキュメントのタイプとバージョンを宣言 -->
-<html lang="en"> <!-- ドキュメントの言語を英語に設定 -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ページがレスポンシブであることを保証 -->
-    <title>Select Model</title> <!-- ウェブページのタイトルを設定 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Model</title>
     <style>
         body {
-            font-family: Arial, sans-serif; /* フォントファミリーを指定 */
-            text-align: center; /* テキストを中央揃えに */
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
         h1 {
-            margin-top: 50px; /* 見出しに上マージンを設定 */
+            margin-top: 50px;
         }
         .button-container {
-            display: flex; /* Flexboxを使用してレイアウトを設定 */
-            justify-content: center; /* ボタンを水平方向に中央揃えに */
-            margin-top: 50px; /* コンテナに上マージンを設定 */
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
         }
         .model-button {
-            font-size: 1.5rem; /* ボタンのフォントサイズを設定 */
-            padding: 1rem 2rem; /* ボタン内のパディングを設定 */
-            margin: 0 20px; /* ボタンの周りのマージンを設定 */
-            border: none; /* ボーダーを非表示に */
-            border-radius: 50px; /* ボタンの角を丸くする */
-            color: white; /* テキストカラーを白に設定 */
-            cursor: pointer; /* カーソルをポインターに設定してクリック可能であることを示す */
-            transition: background-color 0.3s; /* 背景色の変化にトランジション効果を追加 */
+            font-size: 1.5rem;
+            padding: 1rem 2rem;
+            margin: 0 20px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .model-button:hover {
-            opacity: 0.8; /* ホバー時にボタンの不透明度を変更 */
+            opacity: 0.8;
+        }
+        .model-button.selected {
+            transform: scale(1.1);
+            border: 4px solid #FFD700;
+            box-shadow: 0 0 10px #FFD700;
         }
         .resnet50 {
-            background-color: #F44336; /* ResNet50ボタンの背景色を設定 */
+            background-color: #F44336;
         }
         .vgg16 {
-            background-color: #FF9800; /* VGG16ボタンの背景色を設定 */
+            background-color: #FF9800;
         }
         .alexnet {
-            background-color: #4CAF50; /* AlexNetボタンの背景色を設定 */
+            background-color: #4CAF50;
         }
         .efficientnet-b7 {
-            background-color: #9C27B0; /* EfficientNet-B7ボタンの背景色を設定 */
+            background-color: #9C27B0;
+        }
+
+        .image-count-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .image-count-button {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            margin: 0 10px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            background-color: #2196F3;
+        }
+
+        .image-count-button:hover {
+            opacity: 0.8;
+        }
+
+        .image-count-button.selected {
+            transform: scale(1.1);
+            border: 4px solid #FFD700;
+            box-shadow: 0 0 10px #FFD700;
+        }
+
+        h2 {
+            font-size: 2.0rem;
+            text-align: center;
+            margin-top: 50px;
+            color: #333;
+        }
+
+        .start-button {
+            font-size: 1.5rem;
+            padding: 1rem 2rem;
+            margin-top: 50px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            background-color: #4CAF50;
+            transition: background-color 0.3s;
+        }
+
+        .start-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>モデルを選択してください</h1> <!-- メインの見出しを表示 -->
-    <form action="/quiz" method="post"> <!-- データを'/quiz'にポストするフォームを開始 -->
-        <div class="button-container"> <!-- ボタンのコンテナ -->
-            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button> <!-- AlexNetを選択するためのボタン -->
-            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16<br>(2014)</button> <!-- VGG16を選択するためのボタン -->
-            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50<br>(2015)</button> <!-- ResNet50を選択するためのボタン -->
-            <button type="submit" name="model" value="efficientnet-b7" class="model-button efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button> <!-- EfficientNet-B7を選択するためのボタン -->
-        </div>
+    <h1>モデルを選択してください</h1>
+    <div class="button-container">
+        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)</button>
+        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)</button>
+        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)</button>
+        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button>
+    </div>
+
+    <h2>画像の枚数を選択してください</h2>
+    <div class="image-count-container">
+        <button type="button" class="image-count-button selected" data-count="4">4枚</button>
+        <button type="button" class="image-count-button" data-count="6">6枚</button>
+        <button type="button" class="image-count-button" data-count="8">8枚</button>
+        <button type="button" class="image-count-button" data-count="10">10枚</button>
+    </div>
+
+    <form action="/quiz" method="post">
+        <input type="hidden" name="model" id="model-input" value="alexnet">
+        <input type="hidden" name="image_count" id="image-count-input" value="4">
+        <button type="submit" class="start-button">スタート</button>
     </form>
+
+    <script>
+        const modelButtons = document.querySelectorAll('.model-button');
+        const modelInput = document.getElementById('model-input');
+
+        modelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                modelButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                modelInput.value = this.getAttribute('data-model');
+            });
+        });
+
+        const imageCountButtons = document.querySelectorAll('.image-count-button');
+        const imageCountInput = document.getElementById('image-count-input');
+
+        imageCountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                imageCountButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                imageCountInput.value = this.getAttribute('data-count');
+            });
+        });
+    </script>
 </body>
 </html>
