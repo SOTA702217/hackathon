@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ページがレスポンシブであることを保証 -->
-    <title>Select Model</title> <!-- ウェブページのタイトルを設定 -->
+    <title>Select setting</title> <!-- ウェブページのタイトルを設定 -->
     <style>
         body {
             font-family: Arial, sans-serif; /* フォントファミリーを指定 */
@@ -45,7 +45,10 @@
     </style>
 </head>
 <body>
-    <h1>モデルを選択してください</h1> <!-- メインの見出しを表示 -->
+    <h2>あなたの名前を入力してください</h2> <!-- メインの見出しを表示 -->
+    <form action="/quiz" method="post">
+        <input type="text" name="name" placeholder="あなたの名前" required> <!-- 名前入力フィールド -->
+    <h2>モデルを選択してください</h2> <!-- メインの見出しを表示 -->
     <form action="/quiz" method="post"> <!-- データを'/quiz'にポストするフォームを開始 -->
         <div class="button-container"> <!-- ボタンのコンテナ -->
             <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button> <!-- AlexNetを選択するためのボタン -->
