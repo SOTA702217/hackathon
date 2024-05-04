@@ -157,7 +157,7 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes)
+    return render_template('quiz.html', quizzes=quizzes,batch_size=image_count,player_name=player_name)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
