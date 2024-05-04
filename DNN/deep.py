@@ -22,10 +22,10 @@ random_numbers=random.sample(range(10), 4)
 
 # モデル名と種類の辞書
 model_type = {
-    'ResNet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'), # top1:80.9
-    'ResNet18': models.resnet18(weights='ResNet18_Weights.IMAGENET1K_V1'), # top1:69.8
+    'resnet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'), # top1:80.9
+    'efficientnet-b7': models.efficientnet_b7(weights='EfficientNet_B7_Weights.IMAGENET1K_V1'), # top1:69.8
     'VGG16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'), # top1:71.6
-    'AlexNet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1') # top1:56.5
+    'alexnet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1') # top1:56.5
 }
 
 # ネットワークの予測を出力
