@@ -175,8 +175,11 @@ def results():
 
 @app.route('/rankings')
 def show_rankings():
+    player_name = request.args.get('player_name', default="", type=str)
+    player_score = request.args.get('playerScore', default=0, type=int)
+    ai_score = request.args.get('aiScore', default=0, type=int)
     rankings = get_rankings()
-    return render_template('rankings.html', rankings=rankings)
+    return render_template('rankings.html', player_name=player_name, player_score=player_score, ai_score=ai_score,rankings=rankings)
 
 @app.route('/submit', methods=['POST'])
 def submit_result():

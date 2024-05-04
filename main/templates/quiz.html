@@ -116,8 +116,12 @@
   <div id="player-image"></div>
   <div id="ai-image"></div>
   <div id="next-btn"></div> <!-- 次へボタンエリア -->
+  <a href="/" onclick="goBack()" id="back-button">途中退室</a>
 
   <script>
+    function goBack() {
+            window.history.back();
+        }
     // クイズデータをJSON形式で読み込み
     let quizzes = {{ quizzes|tojson }};
     let currentQuizIndex = 0; // 現在のクイズインデックス
@@ -257,6 +261,7 @@
         const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}`; // 結果ページのURL
         window.location.href = url; // URLに移動
     }
+    
   </script>
 
 </body>
