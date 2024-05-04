@@ -1,199 +1,204 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- HTML5 文書宣言 -->
 <html>
 <head>
-  <title>仲間外れクイズ</title>
+  <title>仲間外れクイズ</title> <!-- ページのタイトル -->
   <style>
+    /* 画像を中央に配置するコンテナのスタイル設定 */
     .image-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-      background-color:#f2f2f2; /* 背景色を薄いグレーに設定 */
-      border-radius: 10px;
-      max-width: 1000px;
-      /* max-height: var(--image-height); */
-      margin-left: auto; /* 左右に同じ余白を持たせる */
-      margin-right: auto; /* 左右に同じ余白を持たせる */
-      /* flex-wrap: wrap;
-      justify-content: space-between; */
+      display: flex; /* Flexboxを使用 */
+      justify-content: center; /* 中央揃え */
+      align-items: center; /* アイテムを中央揃え */
+      margin-bottom: 20px; /* 下マージン */
+      background-color:#f2f2f2; /* 背景色 */
+      border-radius: 10px; /* 角の丸み */
+      /* max-width: 1000px; 最大幅 */
+      max-width: var(--max-width);
+      /* max-height: var(--max-height); */
+      margin-left: auto; /* 左マージンを自動 */
+      margin-right: auto; /* 右マージンを自動 */
+      flex-wrap: wrap; /* 折り返し */
     }
 
+    /* 画像行のスタイル設定 */
     .image-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px; /* 画像の間隔を40pxに設定 */
-      margin-bottom: 20px; /* 追加 */
+      display: flex; /* Flexboxを使用 */
+      justify-content: center; /* 中央揃え */
+      align-items: center; /* アイテムを中央揃え */
+      gap: 40px; /* 隙間 */
+      margin-bottom: 20px; /* 下マージン */
     }
 
+    /* 画像カラムのスタイル設定 */
     .image-column {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #e6ffe6; /* 背景色を薄い緑に設定 */
-      padding: 10px; 
-      border-radius: 10px; /* 角丸を10pxに設定 */
+      display: flex; /* Flexboxを使用 */
+      flex-direction: column; /* 縦方向に並べる */
+      align-items: center; /* アイテムを中央揃え */
+      background-color: #e6ffe6; /* 背景色 */
+      padding: 10px; /* パディング */
+      border-radius: 10px; /* 角の丸み */
     }
 
+    /* 画像のスタイル設定 */
     .image-container img {
-      width: 200px;
-      height: 200px;
-      margin: 10px;
-      cursor: pointer;
-      border: 2px solid transparent;
+      width: 200px; /* 幅 */
+      height: 200px; /* 高さ */
+      margin: 10px; /* マージン */
+      cursor: pointer; /* カーソルをポインターに */
+      border: 2px solid transparent; /* 透明の境界線 */
     }
 
-    /* 選んだやつの外枠 */
+    /* 選択された画像のスタイル設定 */
     .image-container img.selected {
-      border-color: blue;
-      border-width: 4px; /* 外枠の太さを4pxに設定 */
-      border-style: solid; /* 外枠のスタイルを実線に設定 */
+      border-color: blue; /* 境界線の色 */
+      border-width: 4px; /* 境界線の幅 */
+      border-style: solid; /* 境界線のスタイル */
     }
 
-    /* AIの外枠 */
+    /* AIが選択した画像のスタイル設定 */
     .image-container img.ai {
-      border-color: green;
-      border-width: 4px; /* 外枠の太さを4pxに設定 */
-      border-style: solid; /* 外枠のスタイルを実線に設定 */
+      border-color: green; /* 境界線の色 */
+      border-width: 4px; /* 境界線の幅 */
+      border-style: solid; /* 境界線のスタイル */
     }
 
-    /* 正解の時の外枠 */
+    /* 正解画像のスタイル設定 */
     .image-container img.correct {
-      border-color: red;
-      border-width: 6px; /* 外枠の太さを4pxに設定 */
-      border-style: solid; /* 外枠のスタイルを実線に設定 */
+      border-color: red; /* 境界線の色 */
+      border-width: 6px; /* 境界線の幅 */
+      border-style: solid; /* 境界線のスタイル */
     }
 
+    /* 結果表示のスタイル設定 */
     #result {
-      text-align: center;
-      font-weight: bold;
-      font-size: 24px;
-      margin-bottom: 20px;
+      text-align: center; /* 中央揃え */
+      font-weight: bold; /* 太字 */
+      font-size: 24px; /* フォントサイズ */
+      /* margin-bottom: 20px; 下マージン */
     }
 
     h1 {
-      text-align: center;
+      text-align: center; /* タイトルの中央揃え */
     }
 
+    /* 次へボタンのスタイル設定（初期は非表示） */
     #next-btn {
-      display: none; /* 初期状態では非表示 */
+      display: none; 
       margin-top: 20px;
-      text-align: center;
+      text-align: center; /* 中央揃え */
     }
 
+    /* 画像のキャプションのスタイル設定 */
     .image-caption {
-      text-align: center;
-      font-weight: bold;
-      margin-top: 5px; /* キャプションと画像の間隔を5pxに設定 */
+      text-align: center; /* 中央揃え */
+      font-weight: bold; /* 太字 */
+      margin-top: 5px; /* 上マージン */
     }
 
+    /* 次へボタンのコンテナスタイル設定 */
     .next-btn-container {
-        text-align: center; /* 追加 */
+        text-align: center; /* 中央揃え */
     }
 
+    /* メッセージ表示のスタイル設定 */
     .message {
-        text-align: center;
-        font-weight: bold;
-        margin-top: 10px;
+        text-align: center; /* 中央揃え */
+        font-weight: bold; /* 太字 */
+        margin-top: 10px; /* 上マージン */
     }
-
   </style>
 </head>
 <body>
-  <h1>仲間外れを選んでください</h1>
+  <h1>仲間外れを選んでください</h1> <!-- ページのヘッダー -->
   <div class="image-container">
     {% for path in image_paths %}
-    <img src="{{ url_for('static', filename=path) }}" onclick="checkAnswer(this)">
+    <img src="{{ url_for('static', filename=path) }}" onclick="checkAnswer(this)"> <!-- 画像を表示し、クリックで答えを確認 -->
     {% endfor %}
   </div>
-  <div id="result"></div>
+  <div id="result"></div> <!-- 結果表示エリア -->
   <div id="image-container"></div>
   <div id="player-image"></div>
   <div id="ai-image"></div>
-  <div id="next-btn"></div>
+  <div id="next-btn"></div> <!-- 次へボタンエリア -->
 
   <script>
-    // Jinja2の構文なのでVSCodeが警告を出すが、実際には問題ない
+    // クイズデータをJSON形式で読み込み
     let quizzes = {{ quizzes|tojson }};
-    let currentQuizIndex = 0;
-    let aiAnswer;
-    let correctAnswer;
-    let images;
-    let playerScore = 0; // プレイヤーの正解数
-    let aiScore = 0; // AIの正解数
-    var batch_size={{batch_size}};
+    let currentQuizIndex = 0; // 現在のクイズインデックス
+    let aiAnswer; // AIの回答
+    let correctAnswer; // 正解
+    let images; // 画像オブジェクトの配列
+    let playerScore = 0; // プレイヤーのスコア
+    let aiScore = 0; // AIのスコア
+    var batch_size = {{batch_size}}; // 写真の枚数
 
-    let width_size = str(batch_size*205);
-    let height_size= str(205);
-    if (bath_size>5){
-      width_size = str(int(batch_size/2 + 0.6) * 205)
-      height_size = str(205 * 2)
+    let width_size = (batch_size * 240).toString();
+    let height_size = "205";
+    if (batch_size > 5) {
+      width_size = (Math.floor(batch_size / 2 + 0.6) * 240).toString();
+      height_size = "410";
     }
 
-
-    // document.documentElement.style.setProperty('--max-width', '1000px');
-    // document.documentElement.style.setProperty('--max-height', '1000px');
+    document.documentElement.style.setProperty('--max-width', width_size+'px');
+    document.documentElement.style.setProperty('--max-height', '1500px');
 
     function loadQuiz() {
-        let quiz = quizzes[currentQuizIndex];
-        correctAnswer = quiz.correct_answer;
-        let imageContainer = document.querySelector('.image-container');
-        imageContainer.innerHTML = '';
+        let quiz = quizzes[currentQuizIndex]; // 現在のクイズを取得
+        correctAnswer = quiz.correct_answer; // 正解を設定
+        let imageContainer = document.querySelector('.image-container'); // 画像コンテナを取得
+        imageContainer.innerHTML = ''; // 画像コンテナを空にする
         images = [];
 
         quiz.image_paths.forEach((path, index) => {
-            let img = document.createElement('img');
-            img.src = `{{ url_for('static', filename='') }}${path}`;
-            img.onclick = () => checkAnswer(img);
-            imageContainer.appendChild(img);
-            images.push(img);
+            let img = document.createElement('img'); // 新しい画像要素を作成
+            img.src = `{{ url_for('static', filename='') }}${path}`; // 画像のパスを設定
+            img.onclick = () => checkAnswer(img); // クリックイベントを設定
+            imageContainer.appendChild(img); // 画像をコンテナに追加
+            images.push(img); // 画像配列に追加
         });
     }
 
-    loadQuiz();
+    loadQuiz(); // クイズをロード
 
     function checkAnswer(img) {
-        // aiAnswerを初期化する
-        let quiz = quizzes[currentQuizIndex];
-        aiAnswer = quiz.ai_answer;
+        // 回答をチェックする関数
+        let quiz = quizzes[currentQuizIndex]; // 現在のクイズを取得
+        aiAnswer = quiz.ai_answer; // AIの回答を取得
 
         images.forEach(img => {
-            img.classList.remove('selected', 'ai');
-            img.onclick = null; // イベントハンドラを無効化
+            img.classList.remove('selected', 'ai'); // すべての選択とAIクラスを削除
+            img.onclick = null; // クリックイベントを無効にする
         });
-        img.classList.add('selected');
+        img.classList.add('selected'); // 選択された画像にクラスを追加
 
-        let selectedIndex = images.indexOf(img);
-        let result = document.getElementById('result');
+        let selectedIndex = images.indexOf(img); // 選択された画像のインデックスを取得
+        let result = document.getElementById('result'); // 結果表示エリアを取得
 
         if (selectedIndex === correctAnswer) {
-            result.textContent = '正解！';
-            playerScore++;
+            result.textContent = '正解！'; // 正解の場合、テキストを設定
+            playerScore++; // スコアを増加
         } else {
-            result.textContent = '不正解...';
+            result.textContent = '不正解...'; // 不正解の場合、テキストを設定
         }
 
         if (aiAnswer === correctAnswer) {
-            aiScore++;
+            aiScore++; // AIスコアを増加
         }
 
-        images[correctAnswer].classList.add('correct');
-        images[aiAnswer].classList.add('ai');
+        images[correctAnswer].classList.add('correct'); // 正解の画像にクラスを追加
+        images[aiAnswer].classList.add('ai'); // AIの回答の画像にクラスを追加
 
-        // 画像とキャプションの表示
-        let imageContainer = document.getElementById('image-container');
-        // let maxWidth = '1200px';
-        // imageContainer.style.maxWidth = maxWidth;
-        imageContainer.innerHTML = '';
+        // 以下、結果表示のための画像とキャプションの設定
+        let imageContainer = document.getElementById('image-container'); // 画像コンテナを取得
+        imageContainer.innerHTML = ''; // コンテナを空にする
 
-        let imageRow = document.createElement('div');
-        imageRow.classList.add('image-row');
+        let imageRow = document.createElement('div'); // 新しい画像行を作成
+        imageRow.classList.add('image-row'); // クラスを追加
 
-        // あなたの回答の画像と人間の画像
+        // プレイヤーの回答の画像とキャプションの設定
         let selectedImageElement = document.createElement('div');
         selectedImageElement.classList.add('image-column');
         selectedImageElement.innerHTML = `
-            <img src="${images[selectedIndex].src}" width="200" height="200">
+            <img src="${images[selectedIndex].src}" width="150" height="150">
             <div class="image-caption">あなたの回答</div>
             <div><img src="{{ url_for('static', filename='images/quiz/human_correct.png') }}" alt="人間が喜ぶ" width="100" height="100"></div>
         `;
@@ -202,11 +207,11 @@
         }
         imageRow.appendChild(selectedImageElement);
 
-        // AIの回答の画像とAIの画像
+        // AIの回答の画像とキャプションの設定
         let aiImageElement2 = document.createElement('div');
         aiImageElement2.classList.add('image-column');
         aiImageElement2.innerHTML = `
-            <img src="${images[aiAnswer].src}" width="200" height="200">
+            <img src="${images[aiAnswer].src}" width="150" height="150">
             <div class="image-caption">AIの回答</div>
             <div><img src="{{ url_for('static', filename='images/quiz/ai_correct.png') }}" alt="AIが喜ぶ" width="100" height="100"></div>
         `;
@@ -215,8 +220,7 @@
         }
         imageRow.appendChild(aiImageElement2);
 
-
-        // 正解の画像
+        // 正解の画像とキャプションの設定
         let correctImageElement = document.createElement('div');
         correctImageElement.classList.add('image-column');
         correctImageElement.innerHTML = `
@@ -229,7 +233,7 @@
         imageRow.appendChild(correctImageElement);
         imageContainer.appendChild(imageRow);
 
-        // 次へボタン
+        // 次へボタンの設定
         let nextButtonElement = document.createElement('div');
         nextButtonElement.classList.add('next-btn-container');
         if (currentQuizIndex === quizzes.length - 1) {
@@ -242,30 +246,28 @@
     }
 
     function showNextQuestion() {
+        // 次のクイズへ移行する関数
         currentQuizIndex++;
         if (currentQuizIndex < quizzes.length) {
-            loadQuiz();
-            document.getElementById('result').textContent = '';
-            // document.getElementById('player-image').innerHTML = '';
-            // document.getElementById('ai-image').innerHTML = '';
-            document.getElementById('image-container').innerHTML = '';
-            document.getElementById('next-btn').remove();
+            loadQuiz(); // 新しいクイズをロード
+            document.getElementById('result').textContent = ''; // 結果テキストをクリア
+            document.getElementById('image-container').innerHTML = ''; // 画像コンテナをクリア
+            document.getElementById('next-btn').remove(); // 次へボタンを削除
 
             // 画像の選択状態とクラスをリセット
             images.forEach(img => {
                 img.classList.remove('selected', 'correct', 'ai');
-                img.onclick = () => checkAnswer(img);
+                img.onclick = () => checkAnswer(img); // クリックイベントを再設定
             });
         } else {
-            // すべてのクイズが終了した場合の処理
-            window.location.href = '/run_script';
+            // 全てのクイズが終了した場合
+            window.location.href = '/run_script'; // 結果ページに遷移
         }
     }
 
     function redirectToRunScript() {
-        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`;
-        // /run_scriptに移動
-        window.location.href = url;
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`; // 結果ページのURL
+        window.location.href = url; // URLに移動
     }
   </script>
 

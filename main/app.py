@@ -32,12 +32,12 @@ app = Flask(__name__)
 # データセットへのパス
 dir_path = './static/dataset'
 # 一度に表示する画像の枚数
-batch_size = 4
+# batch_size = 4
 # 各クラスの写真枚数
 num_sample = 10
 # クラス数(問題数に対応)
 class_num = 10
-random_numbers=random.sample(range(num_sample), batch_size)
+
 
 # モデル名とダウンロードするモデルを対応させる辞書
 model_type = {
@@ -90,8 +90,11 @@ def select_model():
 @app.route('/quiz', methods=['POST'])
 def quiz():
     selected_model = request.form['model']
-        # データローダーをインスタンス化
-    data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
+    image_count = int(request.form['image_count'])
+    random_numbers=random.sample(range(num_sample), image_count)
+    print(image_count)
+    # データローダーをインスタンス化
+    data_loader_instance = test_dataloader(root=dir_path, batch_size=image_count, num_class=class_num, random_numbers=random_numbers)
 
     # run メソッドを呼び出してデータローダーと解答位置を取得
     test_loader, answer_pos = data_loader_instance.run()
@@ -106,7 +109,6 @@ def quiz():
     predict_pos, label, image_paths_list = test(net, test_loader)
     nakamahazure_labels = []
     nakama_labels = []
-    print(label)
     for index, i in enumerate(answer_pos):
         nakamahazure_labels.append(label[index][i]) 
         nakama_labels.append(label[index][i-1])
@@ -125,7 +127,7 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes, batch_size=batch_size)
+    return render_template('quiz.html', quizzes=quizzes, batch_size=image_count)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():

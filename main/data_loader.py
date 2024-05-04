@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  2 18:59:00 2024
-
-@author: reo
-"""
 import os
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
