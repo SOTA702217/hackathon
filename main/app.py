@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-# commit test
->>>>>>> fa98dbfb0ce6900fedd350c5803dc356d9692a86
 import argparse
 # import glob
 # import os
