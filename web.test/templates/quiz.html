@@ -110,6 +110,7 @@
   <div id="next-btn"></div>
 
   <script>
+    // Jinja2の構文なのでVSCodeが警告を出すが、実際には問題ない
     let quizzes = {{ quizzes|tojson }};
     let currentQuizIndex = 0;
     let aiAnswer;
@@ -197,24 +198,13 @@
         }
         imageRow.appendChild(aiImageElement2);
 
-        // 正解の画像
-        // let correctImageElement = document.createElement('div');
-        // correctImageElement.classList.add('image-column');
-        // correctImageElement.innerHTML = `
-        //     <img src="${images[correctAnswer].src}" width="200" height="200">
-        //     <div class="image-caption">正解</div>
-        //     <div style="height: 100px;"></div> <!-- 空白を作る -->
-        // `;
-        // imageRow.appendChild(correctImageElement);
-
-        // imageContainer.appendChild(imageRow);
 
         // 正解の画像
         let correctImageElement = document.createElement('div');
         correctImageElement.classList.add('image-column');
         correctImageElement.innerHTML = `
             <img src="${images[correctAnswer].src}" width="200" height="200">
-            <div class="image-caption">正解</div>
+            <div class="image-caption">正解は…</div>
             <div class="message">
                 「${quiz.nakama}」の中に「${quiz.nakamahazure}」が混じっていました
             </div>
