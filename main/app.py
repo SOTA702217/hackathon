@@ -106,6 +106,7 @@ def quiz():
     predict_pos, label, image_paths_list = test(net, test_loader)
     nakamahazure_labels = []
     nakama_labels = []
+    print(label)
     for index, i in enumerate(answer_pos):
         nakamahazure_labels.append(label[index][i]) 
         nakama_labels.append(label[index][i-1])
@@ -124,7 +125,7 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes)
+    return render_template('quiz.html', quizzes=quizzes, batch_size=batch_size)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
