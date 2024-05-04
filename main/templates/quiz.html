@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>仲間外れクイズ</title>
+  <style>
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      background-color:#f2f2f2; /* 背景色を薄いグレーに設定 */
+      border-radius: 10px;
+      max-width: 1000px; /* 最大幅を800pxに設定 */
+      margin-left: auto; /* 左右に同じ余白を持たせる */
+      margin-right: auto; /* 左右に同じ余白を持たせる */
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px; /* 画像の間隔を40pxに設定 */
+      margin-bottom: 20px; /* 追加 */
+    }
+
+    .image-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #e6ffe6; /* 背景色を薄い緑に設定 */
+      padding: 10px; 
+      border-radius: 10px; /* 角丸を10pxに設定 */
+    }
+
+    .image-container img {
+      width: 200px;
+      height: 200px;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    /* 選んだやつの外枠 */
+    .image-container img.selected {
+      border-color: blue;
+      border-width: 4px; /* 外枠の太さを4pxに設定 */
+      border-style: solid; /* 外枠のスタイルを実線に設定 */
+    }
+
+    /* AIの外枠 */
+    .image-container img.ai {
+      border-color: green;
+      border-width: 4px; /* 外枠の太さを4pxに設定 */
+      border-style: solid; /* 外枠のスタイルを実線に設定 */
+    }
+
+    /* 正解の時の外枠 */
+    .image-container img.correct {
+      border-color: red;
+      border-width: 6px; /* 外枠の太さを4pxに設定 */
+      border-style: solid; /* 外枠のスタイルを実線に設定 */
+    }
+
+    #result {
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #next-btn {
+      display: none; /* 初期状態では非表示 */
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .image-caption {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 5px; /* キャプションと画像の間隔を5pxに設定 */
+    }
+
+    .next-btn-container {
+        text-align: center; /* 追加 */
+    }
+
+    .message {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>仲間外れを選んでください</h1>
+  <div class="image-container">
+    {% for path in image_paths %}
+    <img src="{{ url_for('static', filename=path) }}" onclick="checkAnswer(this)">
+    {% endfor %}
+  </div>
+  <div id="result"></div>
+  <div id="image-container"></div>
+  <div id="player-image"></div>
+  <div id="ai-image"></div>
+  <div id="next-btn"></div>
+
+  <script>
+    // Jinja2の構文なのでVSCodeが警告を出すが、実際には問題ない
+    let quizzes = {{ quizzes|tojson }};
+    let currentQuizIndex = 0;
+    let aiAnswer;
+    let correctAnswer;
+    let images;
+    let playerScore = 0; // プレイヤーの正解数
+    let aiScore = 0; // AIの正解数
+
+    function loadQuiz() {
+        let quiz = quizzes[currentQuizIndex];
+        correctAnswer = quiz.correct_answer;
+        let imageContainer = document.querySelector('.image-container');
+        imageContainer.innerHTML = '';
+        images = [];
+
+        quiz.image_paths.forEach((path, index) => {
+            let img = document.createElement('img');
+            img.src = `{{ url_for('static', filename='') }}${path}`;
+            img.onclick = () => checkAnswer(img);
+            imageContainer.appendChild(img);
+            images.push(img);
+        });
+    }
+
+    loadQuiz();
+
+    function checkAnswer(img) {
+        // aiAnswerを初期化する
+        let quiz = quizzes[currentQuizIndex];
+        aiAnswer = quiz.ai_answer;
+
+        images.forEach(img => {
+            img.classList.remove('selected', 'ai');
+            img.onclick = null; // イベントハンドラを無効化
+        });
+        img.classList.add('selected');
+
+        let selectedIndex = images.indexOf(img);
+        let result = document.getElementById('result');
+
+        if (selectedIndex === correctAnswer) {
+            result.textContent = '正解！';
+            playerScore++;
+        } else {
+            result.textContent = '不正解...';
+        }
+
+        if (aiAnswer === correctAnswer) {
+            aiScore++;
+        }
+
+        images[correctAnswer].classList.add('correct');
+        images[aiAnswer].classList.add('ai');
+
+        // 画像とキャプションの表示
+        let imageContainer = document.getElementById('image-container');
+        imageContainer.innerHTML = '';
+
+        let imageRow = document.createElement('div');
+        imageRow.classList.add('image-row');
+
+        // あなたの回答の画像と人間の画像
+        let selectedImageElement = document.createElement('div');
+        selectedImageElement.classList.add('image-column');
+        selectedImageElement.innerHTML = `
+            <img src="${images[selectedIndex].src}" width="200" height="200">
+            <div class="image-caption">あなたの回答</div>
+            <div><img src="{{ url_for('static', filename='images/quiz/human_correct.png') }}" alt="人間が喜ぶ" width="100" height="100"></div>
+        `;
+        if (selectedIndex !== correctAnswer) {
+            selectedImageElement.lastElementChild.innerHTML = `<img src="{{ url_for('static', filename='images/quiz/human_miss.png') }}" alt="人間が凹む" width="100" height="100">`;
+        }
+        imageRow.appendChild(selectedImageElement);
+
+        // AIの回答の画像とAIの画像
+        let aiImageElement2 = document.createElement('div');
+        aiImageElement2.classList.add('image-column');
+        aiImageElement2.innerHTML = `
+            <img src="${images[aiAnswer].src}" width="200" height="200">
+            <div class="image-caption">AIの回答</div>
+            <div><img src="{{ url_for('static', filename='images/quiz/ai_correct.png') }}" alt="AIが喜ぶ" width="100" height="100"></div>
+        `;
+        if (aiAnswer !== correctAnswer) {
+            aiImageElement2.lastElementChild.innerHTML = `<img src="{{ url_for('static', filename='images/quiz/ai_miss.png') }}" alt="AIが凹む" width="100" height="100">`;
+        }
+        imageRow.appendChild(aiImageElement2);
+
+
+        // 正解の画像
+        let correctImageElement = document.createElement('div');
+        correctImageElement.classList.add('image-column');
+        correctImageElement.innerHTML = `
+            <img src="${images[correctAnswer].src}" width="200" height="200">
+            <div class="image-caption">正解は…</div>
+            <div class="message">
+                「${quiz.nakama}」の中に「${quiz.nakamahazure}」が混じっていました
+            </div>
+        `;
+        imageRow.appendChild(correctImageElement);
+        imageContainer.appendChild(imageRow);
+
+        // 次へボタン
+        let nextButtonElement = document.createElement('div');
+        nextButtonElement.classList.add('next-btn-container');
+        if (currentQuizIndex === quizzes.length - 1) {
+            // 最後のクイズの場合
+            nextButtonElement.innerHTML = '<button onclick="redirectToRunScript()">結果を見る</button>';
+        } else {
+            nextButtonElement.innerHTML = '<button onclick="showNextQuestion()">次へ</button>';
+        }
+        imageContainer.appendChild(nextButtonElement);
+    }
+
+    function showNextQuestion() {
+        currentQuizIndex++;
+        if (currentQuizIndex < quizzes.length) {
+            loadQuiz();
+            document.getElementById('result').textContent = '';
+            // document.getElementById('player-image').innerHTML = '';
+            // document.getElementById('ai-image').innerHTML = '';
+            document.getElementById('image-container').innerHTML = '';
+            document.getElementById('next-btn').remove();
+
+            // 画像の選択状態とクラスをリセット
+            images.forEach(img => {
+                img.classList.remove('selected', 'correct', 'ai');
+                img.onclick = () => checkAnswer(img);
+            });
+        } else {
+            // すべてのクイズが終了した場合の処理
+            window.location.href = '/run_script';
+        }
+    }
+
+    function redirectToRunScript() {
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`;
+        // /run_scriptに移動
+        window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>
