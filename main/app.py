@@ -14,9 +14,6 @@ from torchvision import transforms
 from torchvision import models
 # import glob
 
-import time
-# import psutil
-
 import os
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 from PIL import Image
@@ -24,28 +21,107 @@ from werkzeug.utils import secure_filename
 
 from data_loader import test_dataloader
 import random
+import csv
+import os
+
+# CSVファイルのパス
+file_path = 'rankings.csv'
+
+# CSVファイルを作成して初期データを書き込む
+# with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+#     writer = csv.writer(file)
+#     # 例として、ヘッダーを書き込む（必要に応じて）
+#     writer.writerow(['Player Name', 'Score'])
+#     # 現在の作業ディレクトリを確認
+
+if not os.path.exists(file_path):
+    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        # 例として、ヘッダーを書き込む（必要に応じて）
+        writer.writerow(['Player Name', 'Score'])
+print(os.getcwd())
+
+# ファイルへのパスが正しいか確認
+print(os.path.exists(file_path))
+
+try:
+    with open(file_path, mode='r') as file:
+        # ファイルの読み込み処理
+        pass
+except FileNotFoundError:
+    print(f"Error: The file {file_path} does not exist.")
+
+def print_csv_content(file_path):
+    with open(file_path, mode='r', newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            print(row)
+
+print_csv_content('rankings.csv')
+
 
 # static_folderを指定しているのは、画像ファイルを表示するため
 # app = Flask(__name__, static_folder = "./static/")
 app = Flask(__name__)
 
-# データセットへのパス
 dir_path = './static/dataset'
-# 一度に表示する画像の枚数
-# batch_size = 4
-# 各クラスの写真枚数
+batch_size = 4
 num_sample = 10
-# クラス数(問題数に対応)
 class_num = 10
+random_numbers=random.sample(range(10), 4)
 
 
-# モデル名とダウンロードするモデルを対応させる辞書
 model_type = {
     'alexnet': models.alexnet(weights='AlexNet_Weights.IMAGENET1K_V1'), # top1:56.5
     'vgg16': models.vgg16(weights='VGG16_Weights.IMAGENET1K_V1'), # top1:69.8  
     'resnet50' : models.resnet50(weights='ResNet50_Weights.IMAGENET1K_V2'), # top1:80.9
     'efficientnet-b7': models.efficientnet_b7(weights='EfficientNet_B7_Weights.IMAGENET1K_V1') # top1:84.1
 }
+
+def load_rankings(file_path):
+    rankings = []
+    with open(file_path, mode='r', newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        headers = next(reader, None)  # ヘッダ行を読み飛ばす
+        for row in reader:
+            if row and len(row) == 2:  # 行が空でなく、要素が2つあることを確認
+                try:
+                    rankings.append([row[0], int(row[1])])
+                except ValueError:
+                    print(f"Warning: Skipping invalid score data in row: {row}")
+    print("Loaded rankings:", rankings)  # デバッグ情報
+    return rankings
+
+def csv_to_list(file_path):
+    data_list = []
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        csv_reader = csv.reader(file)
+        next(csv_reader)  # ヘッダー行をスキップ
+        for row in csv_reader:
+            name = row[0].strip()  # 余白を削除
+            score = int(row[1])  # スコアを整数に変換
+            data_list.append([name, score])
+
+    return data_list
+
+rankings = csv_to_list('rankings.csv')
+
+
+# 初期ランキングのロード
+# rankings = load_rankings('rankings.csv')
+# print(rankings)
+
+def save_rankings(rankings, file_path):
+    try:
+        with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Player Name', 'Score'])
+            for ranking in rankings:
+                writer.writerow(ranking)
+        print("Rankings saved successfully.")
+    except Exception as e:
+        print(f"Error saving rankings: {e}")
 
 
 def test(net, loader):
@@ -54,7 +130,7 @@ def test(net, loader):
     targes_list=[]
     images_list=[]
     with torch.no_grad():
-        for _, (img_path, inputs, targets, _) in enumerate(loader):
+        for batch_idx, (img_path, inputs, targets, labels) in enumerate(loader):
             # DNNの予測
             outputs = net(inputs)
             # 予測を確率に
@@ -68,12 +144,16 @@ def test(net, loader):
             # バッチ内で最も予測確率が高いクラスの中で，
             # 最も予測確率が低いサンプルのインデックスを取得し，リストとして保存
             min_index_list.append(int(min_index[predicted]))
-            # 正解ラベルをリストとして保存
+            # 
             targes_list.append(targets)
-            # 写真へのパスを保存
             images_list.append(img_path)
 
     return min_index_list, targes_list, images_list
+
+# モデルをビルド
+# def create_model():
+#     model = models.resnet50(pretrained=True)
+#     return model 
 
 def create_model(models_name):
     model = model_type.get(models_name)
@@ -89,17 +169,15 @@ def select_model():
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
+    player_name = request.form['name']
     selected_model = request.form['model']
-    image_count = int(request.form['image_count'])
-    random_numbers=random.sample(range(num_sample), image_count)
-    print(image_count)
-    # データローダーをインスタンス化
-    data_loader_instance = test_dataloader(root=dir_path, batch_size=image_count, num_class=class_num, random_numbers=random_numbers)
+        # データローダーをインスタンス化
+    data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
 
     # run メソッドを呼び出してデータローダーと解答位置を取得
     test_loader, answer_pos = data_loader_instance.run()
 
-    # モデルをビルド
+    print('| Building net')
     net = create_model(selected_model)
 
     # predict_pos : AIの予測位置
@@ -127,14 +205,42 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes, batch_size=image_count)
+    # print(player_name)
+    return render_template('quiz.html',player_name=player_name, quizzes=quizzes)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
-    player_score = request.args.get('playerScore', 0, type=int)
-    ai_score = request.args.get('aiScore', 0, type=int)
+    global rankings
+       
+    player_name = request.args.get('player_name', default="", type=str)
+    player_score = request.args.get('playerScore', default=0, type=int)
     
-    return render_template('result.html', player_score=player_score, ai_score=ai_score)
+    # スコアをランキングに追加
+    rankings.append([player_name, player_score])
+    # スコアでソート（降順）
+    print(rankings)
+    rankings.sort(key=lambda x: int(x[1]), reverse=True)
+    # トップ10のみを保存
+    if len(rankings) > 10:
+        rankings = rankings[:10]
+    
+    # ランキングをCSVファイルに保存
+    save_rankings(rankings, 'rankings.csv')
+    
+    player_name = request.args.get('player_name', default="", type=str)
+    player_score = request.args.get('playerScore', default=0, type=int)
+    ai_score = request.args.get('aiScore', default=0, type=int)
+    
+    return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score)
+
+@app.route('/rankings')
+def show_rankings():
+    rankings = load_rankings('rankings.csv')
+    print(rankings)
+    if not rankings:
+        print("No rankings available.")
+    return render_template('rankings.html', rankings=rankings)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

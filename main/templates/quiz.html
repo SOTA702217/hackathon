@@ -1,5 +1,5 @@
 <!DOCTYPE html> <!-- HTML5 文書宣言 -->
-<html>
+<html lang="ja"> <!-- 日本語の言語設定でHTML要素を開始 -->
 <head>
   <title>仲間外れクイズ</title> <!-- ページのタイトル -->
   <style>
@@ -11,8 +11,8 @@
       margin-bottom: 20px; /* 下マージン */
       background-color:#f2f2f2; /* 背景色 */
       border-radius: 10px; /* 角の丸み */
-      /* max-width: 1000px; 最大幅 */
-      max-width: var(--max-width);
+      max-width: 1000px;
+      /* max-width: var(--max-width); */
       /* max-height: var(--max-height); */
       margin-left: auto; /* 左マージンを自動 */
       margin-right: auto; /* 右マージンを自動 */
@@ -129,17 +129,8 @@
     let images; // 画像オブジェクトの配列
     let playerScore = 0; // プレイヤーのスコア
     let aiScore = 0; // AIのスコア
-    var batch_size = {{batch_size}}; // 写真の枚数
-
-    let width_size = (batch_size * 240).toString();
-    let height_size = "205";
-    if (batch_size > 5) {
-      width_size = (Math.floor(batch_size / 2 + 0.6) * 240).toString();
-      height_size = "410";
-    }
-
-    document.documentElement.style.setProperty('--max-width', width_size+'px');
-    document.documentElement.style.setProperty('--max-height', '1500px');
+    // let player_name='nanasi';//playername
+    var player_name="{{player_name}}";//playername
 
     function loadQuiz() {
         let quiz = quizzes[currentQuizIndex]; // 現在のクイズを取得
@@ -266,7 +257,7 @@
     }
 
     function redirectToRunScript() {
-        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`; // 結果ページのURL
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}`; // 結果ページのURL
         window.location.href = url; // URLに移動
     }
   </script>

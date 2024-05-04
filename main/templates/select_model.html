@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- HTMLドキュメントのタイプとバージョンを宣言 -->
+<html lang="ja">  <!-- 日本語の言語設定でHTML要素を開始 -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Model</title>
+    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ページがレスポンシブであることを保証 -->
+    <title>Select setting</title> <!-- ウェブページのタイトルを設定 -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -101,26 +101,17 @@
     </style>
 </head>
 <body>
-    <h1>モデルを選択してください</h1>
-    <div class="button-container">
-        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)</button>
-        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)</button>
-        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)</button>
-        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button>
-    </div>
-
-    <h2>画像の枚数を選択してください</h2>
-    <div class="image-count-container">
-        <button type="button" class="image-count-button selected" data-count="4">4枚</button>
-        <button type="button" class="image-count-button" data-count="6">6枚</button>
-        <button type="button" class="image-count-button" data-count="8">8枚</button>
-        <button type="button" class="image-count-button" data-count="10">10枚</button>
-    </div>
-
+    <h1>あなたの名前を入力してください</h1> <!-- メインの見出しを表示 -->
     <form action="/quiz" method="post">
-        <input type="hidden" name="model" id="model-input" value="alexnet">
-        <input type="hidden" name="image_count" id="image-count-input" value="4">
-        <button type="submit" class="start-button">スタート</button>
+        <input type="text" name="name" placeholder="あなたの名前" required> <!-- 名前入力フィールド -->
+    <h1>モデルを選択してください</h1> <!-- メインの見出しを表示 -->
+    <form action="/quiz" method="post"> <!-- データを'/quiz'にポストするフォームを開始 -->
+        <div class="button-container"> <!-- ボタンのコンテナ -->
+            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button> <!-- AlexNetを選択するためのボタン -->
+            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16<br>(2014)</button> <!-- VGG16を選択するためのボタン -->
+            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50<br>(2015)</button> <!-- ResNet50を選択するためのボタン -->
+            <button type="submit" name="model" value="efficientnet-b7" class="model-button efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button> <!-- EfficientNet-B7を選択するためのボタン -->
+        </div>
     </form>
 
     <script>
