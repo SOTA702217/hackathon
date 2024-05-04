@@ -95,6 +95,8 @@ def quiz():
         net = models.vgg16(pretrained=True)
     elif selected_model == 'alexnet':
         net = models.alexnet(pretrained=True)
+    elif selected_model == 'efficientnet-b7':
+        net = models.efficientnet_b7(pretrained=True)
 
     # predict_pos : AIの予測位置
     # label : ラベル
