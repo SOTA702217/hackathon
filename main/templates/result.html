@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,38 +28,42 @@
             background-color: #45a049;
         }
         .fade-in {
-            animation: fadeIn ease 1s forwards;
+            animation: fadeIn ease 1s forwards; /* フェードインアニメーションの設定 */
         }
         @keyframes fadeIn {
-            0% {opacity:0;}
-            100% {opacity:1;}
+            0% {opacity:0;} /* 開始時点で不透明度0 */
+            100% {opacity:1;} /* 終了時点で不透明度1（完全表示） */
         }
     </style>
 </head>
 <body>
-    <h1 id="player-name">{{ player_name }} さん</h1>
     <h1 id="player-score">プレイヤーの正解数: {{ player_score }} / 10</h1>
     <h1 id="ai-score">AIの正解数: {{ ai_score }} / 10</h1>
     <h1 id="result">
         {% if ai_score > player_score %}
-            AIの勝ち！
+            AIの勝ち！ <!-- AIが勝った場合の表示 -->
         {% elif player_score > ai_score %}
-            人間の勝ち！
+            人間の勝ち！ <!-- プレイヤーが勝った場合の表示 -->
         {% else %}
-            引き分け！
+            引き分け！ <!-- 引き分けの場合の表示 -->
         {% endif %}
     </h1>
     <a href="/" id="back-link">戻る</a>
-    <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク追加 -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() { document.getElementById('player-name').classList.add('fade-in'); }, 500);
-            setTimeout(function() { document.getElementById('player-score').classList.add('fade-in'); }, 1000);
-            setTimeout(function() { document.getElementById('ai-score').classList.add('fade-in'); }, 1500);
-            setTimeout(function() { document.getElementById('result').classList.add('fade-in'); }, 2500);
-            setTimeout(function() { document.getElementById('back-link').classList.add('fade-in'); }, 3500);
-            setTimeout(function() { document.getElementById('view-rankings').classList.add('fade-in'); }, 3500); // ランキングリンクのフェードイン
+            setTimeout(function() {
+                document.getElementById('player-score').classList.add('fade-in');
+            }, 500);
+            setTimeout(function() {
+                document.getElementById('ai-score').classList.add('fade-in');
+            }, 1500);
+            setTimeout(function() {
+                document.getElementById('result').classList.add('fade-in');
+            }, 2500);
+            setTimeout(function() {
+                document.getElementById('back-link').classList.add('fade-in');
+            }, 3500);
         });
     </script>
 </body>
