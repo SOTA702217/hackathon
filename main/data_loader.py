@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  2 18:59:00 2024
-
-@author: reo
-"""
 import os
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
@@ -55,11 +48,11 @@ class test_dataset(Dataset):
                 j+=1
 
     def __getitem__(self, index):  
-    #    print(self.images)
+
        img_path = self.images[index]
        targets = self.target[index]     
        labels = self.label[index]
-    #    print(img_path)
+
        image = Image.open(os.path.join(self.root,img_path)).convert('RGB') 
        img = self.transform(image) 
         # returnはそれぞれ，画像へのパス，画像，正解ラベル，正解インデックス
