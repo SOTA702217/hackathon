@@ -1,57 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- HTMLドキュメントのタイプとバージョンを宣言 -->
+<html lang="en"> <!-- ドキュメントの言語を英語に設定 -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Model</title>
+    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ページがレスポンシブであることを保証 -->
+    <title>Select Model</title> <!-- ウェブページのタイトルを設定 -->
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: Arial, sans-serif; /* フォントファミリーを指定 */
+            text-align: center; /* テキストを中央揃えに */
         }
         h1 {
-            margin-top: 50px;
+            margin-top: 50px; /* 見出しに上マージンを設定 */
         }
         .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 50px;
+            display: flex; /* Flexboxを使用してレイアウトを設定 */
+            justify-content: center; /* ボタンを水平方向に中央揃えに */
+            margin-top: 50px; /* コンテナに上マージンを設定 */
         }
         .model-button {
-            font-size: 1.5rem;
-            padding: 1rem 2rem;
-            margin: 0 20px;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 1.5rem; /* ボタンのフォントサイズを設定 */
+            padding: 1rem 2rem; /* ボタン内のパディングを設定 */
+            margin: 0 20px; /* ボタンの周りのマージンを設定 */
+            border: none; /* ボーダーを非表示に */
+            border-radius: 50px; /* ボタンの角を丸くする */
+            color: white; /* テキストカラーを白に設定 */
+            cursor: pointer; /* カーソルをポインターに設定してクリック可能であることを示す */
+            transition: background-color 0.3s; /* 背景色の変化にトランジション効果を追加 */
         }
         .model-button:hover {
-            opacity: 0.8;
+            opacity: 0.8; /* ホバー時にボタンの不透明度を変更 */
         }
         .resnet50 {
-            background-color: #F44336 ;
+            background-color: #F44336; /* ResNet50ボタンの背景色を設定 */
         }
         .vgg16 {
-            background-color: #FF9800;
+            background-color: #FF9800; /* VGG16ボタンの背景色を設定 */
         }
         .alexnet {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* AlexNetボタンの背景色を設定 */
         }
         .efficientnet-b7 {
-            background-color: #9C27B0;
+            background-color: #9C27B0; /* EfficientNet-B7ボタンの背景色を設定 */
         }
     </style>
 </head>
 <body>
-    <h1>モデルを選択してください</h1>
-    <form action="/quiz" method="post">
-        <div class="button-container">
-            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button>
-            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16<br>(2014)</button>
-            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50<br>(2015)</button>
-            <button type="submit" name="model" value="efficientnet-b7" class="model-button efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button>
+    <h1>モデルを選択してください</h1> <!-- メインの見出しを表示 -->
+    <form action="/quiz" method="post"> <!-- データを'/quiz'にポストするフォームを開始 -->
+        <div class="button-container"> <!-- ボタンのコンテナ -->
+            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet<br>(2012)</button> <!-- AlexNetを選択するためのボタン -->
+            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16<br>(2014)</button> <!-- VGG16を選択するためのボタン -->
+            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50<br>(2015)</button> <!-- ResNet50を選択するためのボタン -->
+            <button type="submit" name="model" value="efficientnet-b7" class="model-button efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button> <!-- EfficientNet-B7を選択するためのボタン -->
         </div>
     </form>
 </body>
