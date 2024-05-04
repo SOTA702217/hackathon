@@ -24,39 +24,29 @@ import random
 import csv
 import os
 
-# CSVファイルのパス
-file_path = 'rankings.csv'
 
-# CSVファイルを作成して初期データを書き込む
-with open(file_path, mode='w', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file)
-    # 例として、ヘッダーを書き込む（必要に応じて）
-    writer.writerow(['Player Name', 'Score'])
-    # 現在の作業ディレクトリを確認
-print(os.getcwd())
+from flask_sqlalchemy import SQLAlchemy
 
-# ファイルへのパスが正しいか確認
-print(os.path.exists(file_path))
+app = Flask(__name__)
+# データベース設定
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rankings.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-try:
-    with open(file_path, mode='r') as file:
-        # ファイルの読み込み処理
-        pass
-except FileNotFoundError:
-    print(f"Error: The file {file_path} does not exist.")
+class Ranking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player_name = db.Column(db.String(80), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
 
-def print_csv_content(file_path):
-    with open(file_path, mode='r', newline='', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            print(row)
+    def __repr__(self):
+        return f"<Ranking {self.player_name} score {self.score}>"
 
-print_csv_content('rankings.csv')
+with app.app_context():
+    db.create_all()
 
 
 # static_folderを指定しているのは、画像ファイルを表示するため
 # app = Flask(__name__, static_folder = "./static/")
-app = Flask(__name__)
 
 dir_path = './static/dataset'
 batch_size = 4
@@ -72,36 +62,15 @@ model_type = {
     'efficientnet-b7': models.efficientnet_b7(weights='EfficientNet_B7_Weights.IMAGENET1K_V1') # top1:84.1
 }
 
-def load_rankings(file_path):
-    
-    with open(file_path, mode='r', newline='', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        headers = next(reader, None)  # ヘッダ行を読み飛ばす
-        for row in reader:
-            if row and len(row) == 2:  # 行が空でなく、要素が2つあることを確認
-                try:
-                    rankings.append([row[0], int(row[1])])
-                except ValueError:
-                    print(f"Warning: Skipping invalid score data in row: {row}")
-    print("Loaded rankings:", rankings)  # デバッグ情報
+def add_ranking(player_name, score):
+    new_ranking = Ranking(player_name=player_name, score=score)
+    db.session.add(new_ranking)
+    db.session.commit()
+
+def get_rankings():
+    rankings = Ranking.query.order_by(Ranking.score.desc()).all()
     return rankings
 
-
-
-rankings = []
-# 初期ランキングのロード
-rankings = load_rankings('rankings.csv')
-
-def save_rankings(rankings, file_path):
-    try:
-        with open(file_path, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['Player Name', 'Score'])
-            for ranking in rankings:
-                writer.writerow(ranking)
-        print("Rankings saved successfully.")
-    except Exception as e:
-        print(f"Error saving rankings: {e}")
 
 
 def test(net, loader):
@@ -190,38 +159,31 @@ def quiz():
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
-    if request.method == 'GET':
-        print('入ってるよーーーーーーーーーーーーーーー')
-        player_name = request.form.get('player_name', type=str)
-        player_score = request.form.get('playerScore', type=int)
+    # if request.method == 'POST':
+    #     player_name = request.form.get('player_name', type=str)
+    #     player_score = request.form.get('playerScore', type=int)
         
-        # スコアをランキングに追加
-        rankings.append([player_name, player_score])
-        # スコアでソート（降順）
-        rankings.sort(key=lambda x: int(x[1]), reverse=True)
-        # トップ10のみを保存
-        if len(rankings) > 10:
-            rankings = rankings[:10]
-        
-        # ランキングをCSVファイルに保存
-        save_rankings(rankings, 'rankings.csv')
-        
-        # ランキングページにリダイレクト
-        return redirect(url_for('show_rankings'))
+       
+    #     return redirect(url_for('show_rankings'))  # ランキングページにリダイレクト
 
     player_name = request.args.get('player_name', default="", type=str)
     player_score = request.args.get('playerScore', default=0, type=int)
     ai_score = request.args.get('aiScore', default=0, type=int)
-    
+    add_ranking(player_name, player_score)  # データベースにランキングを追加
+        
     return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score)
 
 @app.route('/rankings')
 def show_rankings():
-    rankings = load_rankings('rankings.csv')
-    print(rankings)
-    if not rankings:
-        print("No rankings available.")
+    rankings = get_rankings()
     return render_template('rankings.html', rankings=rankings)
+
+@app.route('/submit', methods=['POST'])
+def submit_result():
+    player_name = request.form['player_name']
+    score = int(request.form['score'])
+    add_ranking(player_name, score)
+    return redirect(url_for('show_rankings'))
 
 
 if __name__ == '__main__':

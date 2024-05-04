@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ランキング</title>
-</head>
 <body>
     <h1>ランキング</h1>
+    {% if rankings %}
     <ol>
-        {% for name, score in rankings %}
-        <li>{{ name }}: {{ score }}</li>
+        {% for ranking in rankings %}
+        <li>{{ ranking.player_name }}: {{ ranking.score }}</li>
         {% endfor %}
     </ol>
-    <a href="/" id="back-link">戻る</a>
+    {% else %}
+    <p>ランキングデータがありません。</p>
+    {% endif %}
+    <a href="/" id="back-link">ホームに戻る</a>
 </body>
-</html>
