@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Model</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 50px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .model-button {
+            font-size: 1.5rem;
+            padding: 1rem 2rem;
+            margin: 0 20px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .model-button:hover {
+            opacity: 0.8;
+        }
+        .resnet50 {
+            background-color: #F44336 ;
+        }
+        .vgg16 {
+            background-color: #FF9800;
+        }
+        .alexnet {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>モデルを選択してください</h1>
+    <form action="/quiz" method="post">
+        <div class="button-container">
+            <button type="submit" name="model" value="alexnet" class="model-button alexnet">Easy<br>AlexNet</button>
+            <button type="submit" name="model" value="vgg16" class="model-button vgg16">Normal<br>VGG16</button>
+            <button type="submit" name="model" value="resnet50" class="model-button resnet50">Hard<br>ResNet50</button>
+        </div>
+    </form>
+</body>
+</html>

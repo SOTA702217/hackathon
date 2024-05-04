@@ -66,16 +66,21 @@ def test(net, loader):
     return min_index_list, targes_list, images_list
 
 # モデルをビルド
-def create_model():
-    model = models.resnet50(pretrained=True)
-    return model 
+# def create_model():
+#     model = models.resnet50(pretrained=True)
+#     return model 
 
 @app.route('/')
 def index():
     return render_template('button.html')
 
+@app.route('/select_model', methods=['POST'])
+def select_model():
+    return render_template('select_model.html')
+
 @app.route('/quiz', methods=['POST'])
 def quiz():
+    selected_model = request.form['model']
         # データローダーをインスタンス化
     data_loader_instance = test_dataloader(root=dir_path, batch_size=batch_size, num_class=class_num, random_numbers=random_numbers)
 
@@ -83,7 +88,13 @@ def quiz():
     test_loader, answer_pos = data_loader_instance.run()
 
     print('| Building net')
-    net = create_model()
+    # net = create_model()
+    if selected_model == 'resnet50':
+        net = models.resnet50(pretrained=True)
+    elif selected_model == 'vgg16':
+        net = models.vgg16(pretrained=True)
+    elif selected_model == 'alexnet':
+        net = models.alexnet(pretrained=True)
 
     # predict_pos : AIの予測位置
     # label : ラベル
