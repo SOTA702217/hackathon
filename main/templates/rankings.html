@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ランキング</title>
+</head>
+<body>
+    <h1>ランキング</h1>
+    <ol>
+        {% for name, score in rankings %}
+        <li>{{ name }}: {{ score }}</li>
+        {% endfor %}
+    </ol>
+    <a href="/" id="back-link">戻る</a>
+</body>
+</html>
