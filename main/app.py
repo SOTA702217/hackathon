@@ -56,6 +56,8 @@ dir_path = './static/dataset'
 num_sample = 10
 # クラス数(問題数に対応)
 class_num = 10
+#modelの重み
+difficulty=1
 
 
 # モデル名とダウンロードするモデルを対応させる辞書
@@ -118,8 +120,18 @@ def select_model():
 
 @app.route('/quiz', methods=['POST'])
 def quiz():
+    global difficulty
     player_name = request.form['name']
     selected_model = request.form['model']
+    if selected_model=='alexnet':
+        difficulty=1
+    elif selected_model=='vgg16':
+        difficulty=2
+    elif selected_model=='resnet50':
+        difficulty=3
+    else:
+        difficulty=4
+
     image_count = int(request.form['image_count'])
     random_numbers=random.sample(range(num_sample), image_count)
     print(image_count)
@@ -157,21 +169,31 @@ def quiz():
 
     print(quizzes)
     print(len(quizzes))
-    return render_template('quiz.html', quizzes=quizzes,batch_size=image_count,player_name=player_name)
+    return render_template('quiz.html', quizzes=quizzes,batch_size=image_count,player_name=player_name,model=select_model)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
+    global difficulty
     # if request.method == 'POST':
     #     player_name = request.form.get('player_name', type=str)
     #     player_score = request.form.get('playerScore', type=int)
         
-       
     #     return redirect(url_for('show_rankings'))  # ランキングページにリダイレクト
 
     player_name = request.args.get('player_name', default="", type=str)
     player_score = request.args.get('playerScore', default=0, type=int)
     ai_score = request.args.get('aiScore', default=0, type=int)
-    add_ranking(player_name, player_score)  # データベースにランキングを追加
+    # print('うおーーーーーーーーーーーーーーーーーーん'+str(ai_score))
+    batch_size = request.args.get('batchsize', default=0, type=int)
+    print('あいーーーーーーーーーーーーーーーーーーん'+str(difficulty))
+    ai_score=(ai_score*5)*(batch_size)*(difficulty)
+    # print('あいーーーーーーーーーーーーーーーーーーん'+str(ai_score))
+    # print('おりゃーーーーーーーーーーーーーーーーー'+str(batch_size))
+    player_score=(player_score*5)*(batch_size)*(difficulty)
+    if player_score>ai_score:
+        add_ranking(player_name, player_score)  # データベースにランキングを追加
+    elif  player_score==ai_score:
+        add_ranking(player_name, player_score/2)  # データベースにランキングを追加
         
     return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score)
 

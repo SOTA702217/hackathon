@@ -9,12 +9,15 @@
     {% else %}
     <p>ランキングデータがありません。</p>
     {% endif %}
-    <button href="/" id="home-link">ホームに戻る</button>
+    <button onclick="goHome()" id="home-link">ホームに戻る</button>
     <button onclick="goBack()" id="back-button">戻る</button>
 
     <script>
         function goBack() {
             window.history.back();
+        }
+        function goHome() {
+            window.location.href = '/';
         }
     </script>
 </body>

@@ -56,8 +56,9 @@
     </style>
 </head>
 <body>
-    <h1 id="player-score">プレイヤーの正解数: {{ player_score }} / 10</h1>
-    <h1 id="ai-score">AIの正解数: {{ ai_score }} / 10</h1>
+    <h1 id="player-name">{{ player_name }} さん</h1>
+    <h1 id="player-score">プレイヤーの得点: {{ player_score }}点！</h1>
+    <h1 id="ai-score">AIの得点: {{ ai_score }}！</h1>
     <h1 id="result">
         {% if ai_score > player_score %}
             AIの勝ち！ <!-- AIが勝った場合の表示 -->
@@ -67,7 +68,8 @@
             引き分け！ <!-- 引き分けの場合の表示 -->
         {% endif %}
     </h1>
-    <a href="/" id="back-link">戻る</a>
+    <a href="/" id="back-link">ホームに戻る</a>
+    <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク追加 -->
 
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
@@ -75,15 +77,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() { 
+                document.getElementById('player-name').classList.add('fade-in'); 
+            }, 500);
             setTimeout(function() {
                 document.getElementById('player-score').classList.add('fade-in');
-            }, 500);
+            }, 1000);
             setTimeout(function() {
                 document.getElementById('ai-score').classList.add('fade-in');
             }, 1500);
             setTimeout(function() {
                 document.getElementById('result').classList.add('fade-in');
-            }, 2500);
+            }, 3000);
             setTimeout(function() {
                 const result = document.getElementById('result').textContent.trim();
                 if (result === '人間の勝ち！') {
@@ -93,7 +98,10 @@
             }, 3000); // 結果が表示された後にクラッカーを表示
             setTimeout(function() {
                 document.getElementById('back-link').classList.add('fade-in');
-            }, 3500);
+            }, 3000);
+            setTimeout(function() {
+                document.getElementById('view-rankings').classList.add('fade-in'); 
+            }, 3000);
         });
     </script>
 </body>

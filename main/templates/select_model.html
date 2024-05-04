@@ -106,18 +106,18 @@
         <input type="text" name="name" placeholder="あなたの名前" required> <!-- 名前入力フィールド -->
     <h1>モデルを選択してください</h1>
     <div class="button-container">
-        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)</button>
-        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)</button>
-        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)</button>
-        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)</button>
+        <button type="button" class="model-button alexnet selected" data-model="alexnet">Easy<br>AlexNet<br>(2012)<br>(score1倍)</button>
+        <button type="button" class="model-button vgg16" data-model="vgg16">Normal<br>VGG16<br>(2014)<br>(score2倍)</button>
+        <button type="button" class="model-button resnet50" data-model="resnet50">Hard<br>ResNet50<br>(2015)<br>(score3倍)</button>
+        <button type="button" class="model-button efficientnet-b7" data-model="efficientnet-b7">Very Hard<br>EfficientNet-B7<br>(2019)<br>(score4倍)</button>
     </div>
 
     <h2>画像の枚数を選択してください</h2>
     <div class="image-count-container">
-        <button type="button" class="image-count-button selected" data-count="4">4枚</button>
-        <button type="button" class="image-count-button" data-count="6">6枚</button>
-        <button type="button" class="image-count-button" data-count="8">8枚</button>
-        <button type="button" class="image-count-button" data-count="10">10枚</button>
+        <button type="button" class="image-count-button selected" data-count="4">4枚(score2倍)</button>
+        <button type="button" class="image-count-button" data-count="6">6枚(score3倍)</button>
+        <button type="button" class="image-count-button" data-count="8">8枚(score4倍)</button>
+        <button type="button" class="image-count-button" data-count="10">10枚(score5倍)</button>
     </div>
 
     <form action="/quiz" method="post">

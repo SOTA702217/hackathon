@@ -185,7 +185,7 @@
         } else {
             result.textContent = '不正解...'; // 不正解の場合、テキストを設定
         }
-
+        
         if (aiAnswer === correctAnswer) {
             aiScore++; // AIスコアを増加
         }
@@ -272,7 +272,7 @@
     }
 
     function redirectToRunScript() {
-        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}`; // 結果ページのURL
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}&batchsize=${batch_size}`; // 結果ページのURL
         window.location.href = url; // URLに移動
     }
     
