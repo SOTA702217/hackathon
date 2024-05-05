@@ -1,0 +1,84 @@
+<!DOCTYPE html> <!-- HTML5文書の宣言 -->
+<html lang="ja"> <!-- ページの言語設定を日本語に -->
+<head>
+    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
+    <title>ランキングページ</title> <!-- ブラウザのタブに表示されるページタイトル -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* ボディのフォントスタイルを指定 */
+            text-align: center; /* テキストを中央揃えに設定 */
+            background-color: #f8f9fa; /* 背景色を設定 */
+            color: #333; /* テキストの色を設定 */
+            margin-top: 50px; /* 上の余白を50pxに設定 */
+        }
+        h1 {
+            color: #007bff; /* 見出し1のテキスト色を青色に設定 */
+        }
+        table {
+            margin: auto; /* テーブルを中央に配置 */
+            width: 70%; /* テーブルの幅を70%に設定 */
+            border-collapse: collapse; /* セルの境界線を合わせる */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* ボックスの影を設定 */
+        }
+        th {
+            border: 1px solid #ddd; /* ヘッダーの境界線を設定 */
+            padding: 10px; /* ヘッダーの内側の余白を設定 */
+            text-align: left; /* ヘッダーのテキストを左揃えに */
+            background-color: #4CAF50; /* ヘッダーの背景色を緑に */
+            color: white; /* ヘッダーのテキスト色を白に */
+        }
+        td {
+            border: 1px solid #ddd; /* データセルの境界線を設定 */
+            padding: 8px; /* データセルの内側の余白を設定 */
+        }
+        tr:nth-child(even){background-color: #f2f2f2;} /* 偶数行の背景色を設定 */
+        tr:hover {background-color: #ddd;} /* 行にマウスオーバーしたときの背景色を設定 */
+        button {
+            background-color: #007bff; /* ボタンの背景色を設定 */
+            color: white; /* ボタンのテキスト色を白に */
+            padding: 10px 20px; /* ボタンの内側の余白を設定 */
+            margin: 20px 10px; /* ボタンの外側の余白を設定 */
+            border: none; /* ボタンの境界線を非表示に */
+            border-radius: 5px; /* ボタンの角を丸く */
+            cursor: pointer; /* カーソルを指に */
+            transition: background-color 0.3s, transform 0.2s; /* 色とサイズ変更のアニメーションを設定 */
+        }
+        button:hover {
+            background-color: #0056b3; /* ボタンにホバーしたときの背景色を濃い青に */
+            transform: scale(1.1); /* ボタンを少し大きくする */
+        }
+    </style>
+</head>
+<body>
+    <h1>点数ランキング</h1> <!-- ページのメインタイトル -->
+    {% if rankings %} <!-- もしランキングデータが存在するなら -->
+    <table> <!-- テーブルの開始 -->
+        <tr> <!-- テーブル行の開始 -->
+            <th>順位</th> <!-- 列ヘッダー -->
+            <th>プレイヤー名</th> <!-- 列ヘッダー -->
+            <th>スコア</th> <!-- 列ヘッダー -->
+        </tr>
+        {% for ranking in rankings %} <!-- ランキングデータをループで表示 -->
+        <tr> <!-- テーブル行の開始 -->
+            <td>{{ loop.index }}</td> <!-- 順位 -->
+            <td>{{ ranking.player_name }}</td> <!-- プレイヤー名 -->
+            <td>{{ ranking.score }}</td> <!-- スコア -->
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>ランキングデータがありません。</p> <!-- ランキングデータがない場合のテキスト -->
+    {% endif %}
+    <button onclick="goHome()" id="home-link">ホームに戻る</button> <!-- ホームに戻るボタン -->
+    <button onclick="goBack()" id="back-button">前のページに戻る</button> <!-- 前のページに戻るボタン -->
+
+    <script>
+        function goBack() { // 戻るボタンの関数
+            window.history.back(); // ブラウザの履歴を一つ戻る
+        }
+        function goHome() { // ホームボタンの関数
+            window.location.href = '/'; // ルートディレクトリに遷移
+        }
+    </script>
+</body>
+</html>

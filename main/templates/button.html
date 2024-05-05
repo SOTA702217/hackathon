@@ -1,32 +1,73 @@
 <!DOCTYPE html> <!-- HTML5文書を定義 -->
-<html lang="en"> <!-- 文書の言語が英語であることを指定 -->
+<html lang="ja"> <!-- HTMLの内容が日本語であることを宣言 -->
 <head>
-    <meta charset="UTF-8"> <!-- 文字コードをUTF-8として設定 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- レスポンシブデザインのためのビューポート設定 -->
-    <title>Run Python Script</title> <!-- ウェブページのタイトル -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 外部CSSファイルをリンク -->
+    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8に設定 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- レスポンシブデザイン用のビューポート設定 -->
+    <title>Run Python Script</title> <!-- ページのタイトルを設定 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 外部スタイルシートファイルをリンク -->
     <style>
         .vs-image {
-            display: block; /* 画像をブロック要素として表示 */
-            max-width: 80%; /* 最大幅を80%に設定 */
-            height: auto; /* 高さを自動で調整 */
-            margin: 0 auto; /* 上下のマージンは0、左右は自動で中央揃え */
+            display: block; /* 画像をブロックレベル要素として表示 */
+            max-width: 80%; /* 画像の最大幅を80%に制限 */
+            height: auto; /* 画像の高さを自動調整 */
+            margin: 0 auto; /* 画像を水平中央に配置 */
         }
         .battle-title {
-            font-size: 3rem; /* フォントサイズを3remに設定 */
-            font-weight: bold; /* フォントを太字に設定 */
+            font-size: 3rem; /* タイトルのフォントサイズを3remに設定 */
+            font-weight: bold; /* フォントの太さをboldに設定 */
             text-align: center; /* テキストを中央揃えに設定 */
             color: #ff3333; /* テキストの色を赤に設定 */
-            text-shadow: 2px 2px 4px #000000; /* テキストに黒い影を付ける */
-            margin-bottom: 1rem; /* 下のマージンを1remに設定 */
+            text-shadow: 2px 2px 4px #000000; /* テキストに黒の影をつける */
+            margin-bottom: 1rem; /* 要素下に1remのマージンを設定 */
+            transition: color 0.3s, transform 0.2s; /* 色と変形のトランジションを設定 */
+        }
+        .battle-title:hover {
+            color: #ff6666; /* ホバー時のテキスト色を明るい赤に変更 */
+            transform: scale(1.1); /* ホバー時にテキストサイズを10%拡大 */
+        }
+        .start-button {
+            display: block; /* ボタンをブロックレベル要素として表示 */
+            margin: 0 auto; /* ボタンを水平中央に配置 */
+            font-size: 1.5rem; /* ボタンのフォントサイズを1.5remに設定 */
+            padding: 0.5rem 1rem; /* ボタンの内側に余白を設定 */
+            background-color: #ff3333; /* ボタンの背景色を赤に設定 */
+            color: white; /* ボタンのテキスト色を白に設定 */
+            border: none; /* ボタンの境界線を消去 */
+            border-radius: 0.5rem; /* ボタンの角を丸く設定 */
+            box-shadow: 2px 2px 4px #000000; /* ボタンに影を付ける */
+            transition: background-color 0.3s, transform 0.2s; /* 背景色と変形のトランジションを設定 */
+        }
+        .start-button:hover {
+            background-color: #e60000; /* ホバー時の背景色を濃い赤に変更 */
+            transform: scale(1.1); /* ホバー時にボタンサイズを5%拡大 */
         }
     </style>
+    <audio id="start_audio" src="{{ url_for('static', filename='sounds/button/start.mp3') }}"></audio>
 </head>
 <body>
-    <h1 class="battle-title">人間　VS　AI<br>究極の画像分類バトル！！</h1> <!-- ヘッダー1（タイトル）を表示 -->
-    <img src="{{ url_for('static', filename='images/button/human_vs_ai.png') }}" alt="人間 vs AI" class="vs-image"> <!-- 画像ファイルを挿入 -->
-    <form action="/select_model" method="post"> <!-- フォームの送信先と方法を指定 -->
-        <button type="submit" style="display: block; margin: 0 auto; font-size: 1.5rem; padding: 0.5rem 1rem; background-color: #ff3333; color: #fff; border: none; border-radius: 0.5rem; box-shadow: 2px 2px 4px #000000;">BATTLE START !!</button> <!-- ボタンを配置 -->
+    <h1 class="battle-title">人間　VS　AI<br>究極の画像分類バトル！！</h1> <!-- ヘッダー1でページタイトルを表示 -->
+    <img src="{{ url_for('static', filename='images/button/human_vs_ai.png') }}" alt="人間 vs AI" class="vs-image"> <!-- 対戦テーマを示す画像を挿入 -->
+    <form action="/select_model" method="post" id="start-form"> <!-- フォームを開始、データ送信先と送信方式を指定 -->
+        <button type="submit" class="start-button" id="start-button">BATTLE START !!</button> <!-- 提出ボタンを設置、クリックでフォーム送信 -->
+        <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク -->
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var startButton = document.getElementById('start-button');
+            var startAudio = document.getElementById('start_audio');
+            var startForm = document.getElementById('start-form');
+
+            startButton.addEventListener('click', function(event) {
+                event.preventDefault(); // フォームの送信を一時的に防ぐ
+                startAudio.play(); // 音声を再生
+
+                // 音声の再生が終わった後にフォームを送信
+                startAudio.onended = function() {
+                    startForm.submit();
+                };
+            });
+        });
+    </script>
 </body>
 </html>

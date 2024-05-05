@@ -1,31 +1,33 @@
-<!DOCTYPE html> <!-- HTML5文書の宣言 -->
-<html lang="en"> <!-- 英語の言語設定でHTML要素を開始 -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8"> <!-- 文字エンコーディングをUTF-8として設定 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- レスポンシブデザインのためのビューポート設定 -->
-    <title>結果</title> <!-- ページタイトルの設定 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結果</title>
     <style>
         body {
-            font-family: Arial, sans-serif; /* フォントファミリーをArial, sans-serifに設定 */
-            text-align: center; /* テキストを中央揃えに */
-            margin-top: 50px; /* 上部のマージンを50pxに設定 */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
         }
         h1 {
-            margin-bottom: 30px; /* H1タグの下マージンを30pxに設定 */
-            opacity: 0; /* 初期の不透明度を0に設定（非表示） */
+            margin-bottom: 30px;
+            opacity: 0;
         }
         a {
-            display: inline-block; /* リンクをインラインブロック要素として表示 */
-            margin-top: 20px; /* 上のマージンを20pxに設定 */
-            padding: 10px 20px; /* パディングを設定 */
-            background-color: #4CAF50; /* 背景色を緑に設定 */
-            color: white; /* テキストの色を白に設定 */
-            text-decoration: none; /* テキストの下線をなしに設定 */
-            border-radius: 5px; /* ボーダーの角を丸く（半径5px） */
-            opacity: 0; /* 初期の不透明度を0に設定（非表示） */
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
         }
         a:hover {
-            background-color: #45a049; /* ホバー時の背景色を少し暗めの緑に設定 */
+            background-color: #45a049;
+            transform: scale(1.1); /* ホバーで少し大きく */
         }
         .fade-in {
             animation: fadeIn ease 1s forwards; /* フェードインアニメーションの設定 */
@@ -34,7 +36,6 @@
             0% {opacity:0;} /* 開始時点で不透明度0 */
             100% {opacity:1;} /* 終了時点で不透明度1（完全表示） */
         }
-
         .cracker {
             position: absolute;
             top: 10%;
@@ -66,14 +67,23 @@
         }
         /* これを追加することで，画像とボタンが重なっても大丈夫 */
         #back-link {
+            opacity: 0;
+            position: relative; /* ボタンの位置を通常の文書フローに戻す */
+            z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
+        }
+        #view-rankings {
+            opacity: 0;
             position: relative; /* ボタンの位置を通常の文書フローに戻す */
             z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
         }
     </style>
+    <audio id="victory-sound" src="{{ url_for('static', filename='sounds/results/winner.mp3') }}"></audio>
+    <audio id="defeat-sound" src="{{ url_for('static', filename='sounds/results/loser.mp3') }}"></audio>
 </head>
 <body>
-    <h1 id="player-score">プレイヤーの正解数: {{ player_score }} / 10</h1> <!-- プレイヤーのスコア表示 -->
-    <h1 id="ai-score">AIの正解数: {{ ai_score }} / 10</h1> <!-- AIのスコア表示 -->
+    <h1 id="player-name">{{ player_name }} さん</h1>
+    <h1 id="player-score">プレイヤーの得点: {{ player_score }}点！</h1>
+    <h1 id="ai-score">AIの得点: {{ ai_score }}点！</h1>
     <h1 id="result">
         {% if ai_score > player_score %}
             AIの勝ち！ <!-- AIが勝った場合の表示 -->
@@ -83,7 +93,13 @@
             引き分け！ <!-- 引き分けの場合の表示 -->
         {% endif %}
     </h1>
-    <a href="/" id="back-link">戻る</a> <!-- 「戻る」リンク -->
+    <a href="/" id="back-link">ホームに戻る</a>
+    <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク追加 -->
+
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
+    <img src="{{ url_for('static', filename='images/results/ai_win.png') }}" alt="aiwin" class="cracker ai">
+    <img src="{{ url_for('static', filename='images/results/human_lose.png') }}" alt="humanlose" class="cracker human">
 
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
@@ -92,16 +108,30 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // ページが完全にロードされた後に以下の関数を実行
+            setTimeout(function() { 
+                document.getElementById('player-name').classList.add('fade-in'); 
+            }, 500);
             setTimeout(function() {
                 document.getElementById('player-score').classList.add('fade-in');
-            }, 500); // 500ミリ秒後にプレイヤースコアをフェードイン
+            }, 1000);
             setTimeout(function() {
                 document.getElementById('ai-score').classList.add('fade-in');
-            }, 1500); // 1500ミリ秒後にAIスコアをフェードイン
+            }, 1500);
             setTimeout(function() {
                 document.getElementById('result').classList.add('fade-in');
-            }, 2500); // 2500ミリ秒後に結果をフェードイン
+            }, 3000);
+            setTimeout(function() {
+                const result = document.getElementById('result').textContent.trim();
+                if (result === '人間の勝ち！') {
+                    document.getElementById('victory-sound').play(); // 勝利音を再生
+                    document.querySelector('.cracker.left').classList.add('show');
+                    document.querySelector('.cracker.right').classList.add('show');
+                } else if (result === 'AIの勝ち！') {
+                    document.getElementById('defeat-sound').play(); // 敗北音を再生
+                    document.querySelector('.cracker.ai').classList.add('show');
+                    document.querySelector('.cracker.human').classList.add('show');
+                }
+            }, 3000); // 結果が表示された後にクラッカーを表示
             setTimeout(function() {
                 const result = document.getElementById('result').textContent.trim();
                 if (result === '人間の勝ち！') {
@@ -114,8 +144,10 @@
             }, 3000); // 結果が表示された後にクラッカーを表示
             setTimeout(function() {
                 document.getElementById('back-link').classList.add('fade-in');
-            }, 3500); // 3500ミリ秒後に「戻る」リンクをフェードイン
-            
+            }, 3000);
+            setTimeout(function() {
+                document.getElementById('view-rankings').classList.add('fade-in'); 
+            }, 3000);
         });
 
 

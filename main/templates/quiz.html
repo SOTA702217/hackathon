@@ -1,5 +1,5 @@
 <!DOCTYPE html> <!-- HTML5 文書宣言 -->
-<html>
+<html lang="ja"> <!-- 日本語の言語設定でHTML要素を開始 -->
 <head>
   <title>仲間外れクイズ</title> <!-- ページのタイトル -->
   <style>
@@ -46,6 +46,9 @@
       cursor: pointer; /* カーソルをポインターに */
       border: 2px solid transparent; /* 透明の境界線 */
     }
+    .image-container img:hover {
+            transform: scale(1.05); /* ホバー時にボタンサイズを5%拡大 */
+        }
 
     /* 選択された画像のスタイル設定 */
     .image-container img.selected {
@@ -107,6 +110,8 @@
         margin-top: 10px; /* 上マージン */
     }
   </style>
+  <audio id="correct-sound" src="{{ url_for('static', filename='sounds/quiz/correct.mp3') }}"></audio>
+  <audio id="incorrect-sound" src="{{ url_for('static', filename='sounds/quiz/wrong.mp3') }}"></audio>
 </head>
 <body>
   <h1>仲間外れを選んでください</h1> <!-- ページのヘッダー -->
@@ -120,8 +125,12 @@
   <div id="player-image"></div>
   <div id="ai-image"></div>
   <div id="next-btn"></div> <!-- 次へボタンエリア -->
+  <a href="/" onclick="goBack()" id="back-button">途中退室</a>
 
   <script>
+    function goBack() {
+            window.history.back();
+        }
     // クイズデータをJSON形式で読み込み
     let quizzes = {{ quizzes|tojson }};
     let currentQuizIndex = 0; // 現在のクイズインデックス
@@ -130,6 +139,8 @@
     let images; // 画像オブジェクトの配列
     let playerScore = 0; // プレイヤーのスコア
     let aiScore = 0; // AIのスコア
+    // let player_name='nanasi';//playername
+    var player_name="{{player_name}}";//playername
     var batch_size = {{batch_size}}; // 写真の枚数
 
     let width_size = (batch_size * 240).toString();
@@ -177,10 +188,12 @@
         if (selectedIndex === correctAnswer) {
             result.textContent = '正解！'; // 正解の場合、テキストを設定
             playerScore++; // スコアを増加
+            document.getElementById('correct-sound').play(); // 正解音を再生
         } else {
             result.textContent = '不正解...'; // 不正解の場合、テキストを設定
+            document.getElementById('incorrect-sound').play(); // 不正解音を再生
         }
-
+        
         if (aiAnswer === correctAnswer) {
             aiScore++; // AIスコアを増加
         }
@@ -267,9 +280,10 @@
     }
 
     function redirectToRunScript() {
-        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}`; // 結果ページのURL
+        const url = `/results?playerScore=${playerScore}&aiScore=${aiScore}&player_name=${player_name}&batchsize=${batch_size}`; // 結果ページのURL
         window.location.href = url; // URLに移動
     }
+    
   </script>
 
 </body>
