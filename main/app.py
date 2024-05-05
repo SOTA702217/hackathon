@@ -140,6 +140,8 @@ def results():
     player_score = request.args.get('playerScore', default=0, type=int)  # URLパラメータからプレイヤースコアを取得
     ai_score = request.args.get('aiScore', default=0, type=int)  # URLパラメータからAIスコアを取得
     batch_size = request.args.get('batchsize', default=0, type=int)  # URLパラメータからバッチサイズを取得
+    origin_player_score = player_score 
+    origin_ai_score = ai_score
     ai_score = (ai_score * 5) * (batch_size) * (difficulty)  # AIスコアを計算
     player_score = (player_score * 5) * (batch_size) * (difficulty)  # プレイヤースコアを計算
     if player_score > ai_score:
@@ -147,7 +149,8 @@ def results():
     elif player_score == ai_score:
         add_ranking(player_name, player_score / 2)  # スコアが同じ場合、半分のスコアでランキングに追加
 
-    return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score)  # result.htmlをレンダリングして表示
+    return render_template('result.html', player_name=player_name, player_score=player_score, ai_score=ai_score,
+                           origin_player_score = origin_player_score, origin_ai_score = origin_ai_score)  # result.htmlをレンダリングして表示
 
 @app.route('/rankings')  # ランキングページのルートを定義
 def show_rankings():
