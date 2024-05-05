@@ -67,14 +67,18 @@
         }
         /* これを追加することで，画像とボタンが重なっても大丈夫 */
         #back-link {
+            opacity: 0;
             position: relative; /* ボタンの位置を通常の文書フローに戻す */
             z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
         }
         #view-rankings {
+            opacity: 0;
             position: relative; /* ボタンの位置を通常の文書フローに戻す */
             z-index: 1; /* ボタンを画像の前面に表示するため、z-indexを高くする */
         }
     </style>
+    <audio id="victory-sound" src="{{ url_for('static', filename='sounds/results/winner.mp3') }}"></audio>
+    <audio id="defeat-sound" src="{{ url_for('static', filename='sounds/results/loser.mp3') }}"></audio>
 </head>
 <body>
     <h1 id="player-name">{{ player_name }} さん</h1>
@@ -91,6 +95,11 @@
     </h1>
     <a href="/" id="back-link">ホームに戻る</a>
     <a href="/rankings" id="view-rankings">ランキングを見る</a> <!-- ランキングページへのリンク追加 -->
+
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
+    <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
+    <img src="{{ url_for('static', filename='images/results/ai_win.png') }}" alt="aiwin" class="cracker ai">
+    <img src="{{ url_for('static', filename='images/results/human_lose.png') }}" alt="humanlose" class="cracker human">
 
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Left" class="cracker left">
     <img src="{{ url_for('static', filename='images/results/cracker.gif') }}" alt="Cracker Right" class="cracker right">
@@ -114,6 +123,18 @@
             setTimeout(function() {
                 const result = document.getElementById('result').textContent.trim();
                 if (result === '人間の勝ち！') {
+                    document.getElementById('victory-sound').play(); // 勝利音を再生
+                    document.querySelector('.cracker.left').classList.add('show');
+                    document.querySelector('.cracker.right').classList.add('show');
+                } else if (result === 'AIの勝ち！') {
+                    document.getElementById('defeat-sound').play(); // 敗北音を再生
+                    document.querySelector('.cracker.ai').classList.add('show');
+                    document.querySelector('.cracker.human').classList.add('show');
+                }
+            }, 3000); // 結果が表示された後にクラッカーを表示
+            setTimeout(function() {
+                const result = document.getElementById('result').textContent.trim();
+                if (result === '人間の勝ち！') {
                     document.querySelector('.cracker.left').classList.add('show');
                     document.querySelector('.cracker.right').classList.add('show');
                 } else if (result === 'AIの勝ち！') {
@@ -128,6 +149,8 @@
                 document.getElementById('view-rankings').classList.add('fade-in'); 
             }, 3000);
         });
+
+
     </script>
 </body>
 </html>

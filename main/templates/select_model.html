@@ -115,6 +115,8 @@
         }
         
     </style>
+    <!-- <audio id="start-sound" src="{{ url_for('static', filename='sounds/select_model/horagai.mp3') }}"></audio> -->
+</head>
 </head>
 <body>
     <h1>あなたの名前を入力してください</h1> <!-- メインの見出しを表示 -->
@@ -143,10 +145,10 @@
         <button type="button" class="image-count-button" data-count="10">10枚(score5倍)</button>
     </div>
 
-    <form action="/quiz" method="post">
+    <form action="/quiz" method="post" id="start-form">
         <input type="hidden" name="model" id="model-input" value="alexnet">
         <input type="hidden" name="image_count" id="image-count-input" value="4">
-        <button type="submit" class="start-button">スタート</button>
+        <button type="submit" class="start-button" id="start-button">スタート</button>
     </form>
     <a href="/" onclick="goBack()" id="back-button">戻る</a>
 
@@ -175,6 +177,7 @@
         function goBack() {
             window.history.back();
         }
+
     </script>
 </body>
 </html>
