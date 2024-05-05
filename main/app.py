@@ -32,6 +32,7 @@ num_sample = 10
 class_num = 10
 #modelの重み
 difficulty=1
+rank=[]
 
 class Ranking(db.Model):  # データベースのランキングテーブルのモデルクラス
     id = db.Column(db.Integer, primary_key=True)  # ユニークなID
@@ -58,8 +59,14 @@ def add_ranking(player_name, score):  # ランキングに新しいエントリ�
     db.session.commit()
 
 def get_rankings():  # ランキングを取得する関数
+    global rank
+    rank=[]
     rankings = Ranking.query.order_by(Ranking.score.desc()).all()
-    return rankings
+    for item in rankings[:10]:
+        rank.append(item)
+        # print(item)
+    # print(rankings)
+    return rank
 
 def test(net, loader):  # ネットワークでテストデータを評価する関数
     net.eval()
