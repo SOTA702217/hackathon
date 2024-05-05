@@ -66,9 +66,10 @@
 
     /* 正解画像のスタイル設定 */
     .image-container img.correct {
-      border-color: red; /* 境界線の色 */
-      border-width: 6px; /* 境界線の幅 */
-      border-style: solid; /* 境界線のスタイル */
+      /* border-color: red;
+      border-width: 6px; 
+      border-style: solid;  */
+      box-shadow: 0 0 20px 10px rgba(255, 255, 0, 0.8);
     }
 
     /* 結果表示のスタイル設定 */
@@ -109,6 +110,8 @@
         margin-top: 10px; /* 上マージン */
     }
   </style>
+  <audio id="correct-sound" src="{{ url_for('static', filename='sounds/quiz/correct.mp3') }}"></audio>
+  <audio id="incorrect-sound" src="{{ url_for('static', filename='sounds/quiz/wrong.mp3') }}"></audio>
 </head>
 <body>
   <h1>仲間外れを選んでください</h1> <!-- ページのヘッダー -->
@@ -185,8 +188,10 @@
         if (selectedIndex === correctAnswer) {
             result.textContent = '正解！'; // 正解の場合、テキストを設定
             playerScore++; // スコアを増加
+            document.getElementById('correct-sound').play(); // 正解音を再生
         } else {
             result.textContent = '不正解...'; // 不正解の場合、テキストを設定
+            document.getElementById('incorrect-sound').play(); // 不正解音を再生
         }
         
         if (aiAnswer === correctAnswer) {
