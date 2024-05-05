@@ -82,8 +82,9 @@
 </head>
 <body>
     <h1 id="player-name">{{ player_name }} さん</h1>
-    <h1 id="player-score">プレイヤーの得点: {{ player_score }}点！</h1>
-    <h1 id="ai-score">AIの得点: {{ ai_score }}点！</h1>
+    <!-- ゴリ押しで調整しました笑 -->
+    <h1 id="player-score">プレイヤー &nbsp;&nbsp;&nbsp;&nbsp;正解: {{ origin_player_score }} / 10 &nbsp;スコア:{{ player_score }}</h1>
+    <h1 id="ai-score">AI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;正解: {{ origin_ai_score }} / 10 &nbsp;スコア:{{ai_score}}</h1>
     <h1 id="result">
         {% if ai_score > player_score %}
             AIの勝ち！ <!-- AIが勝った場合の表示 -->
